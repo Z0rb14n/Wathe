@@ -30,7 +30,7 @@ repositories {
     }
 
 	maven {
-        url "https://maven.terraformersmc.com/releases/"
+        url "https://maven.terraformersmc.com/"
         name "Mod Menu"
     }
 
@@ -52,6 +52,15 @@ repositories {
 
 loom {
 	accessWidenerPath = file("src/main/resources/wathe.accesswidener")
+
+	runs {
+		client {
+			runDir = "clientrun" // Change this to your desired directory, e.g., "server-data"
+		}
+		server {
+			runDir = "serverrun" // Change this to your desired directory, e.g., "server-data"
+		}
+	}
 }
 
 fabricApi {

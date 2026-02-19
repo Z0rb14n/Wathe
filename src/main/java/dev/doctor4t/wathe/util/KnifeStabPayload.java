@@ -1,6 +1,7 @@
 package dev.doctor4t.wathe.util;
 
 import dev.doctor4t.wathe.Wathe;
+import dev.doctor4t.wathe.WatheConfig;
 import dev.doctor4t.wathe.api.WatheGameModes;
 import dev.doctor4t.wathe.cca.GameWorldComponent;
 import dev.doctor4t.wathe.game.GameConstants;
@@ -36,7 +37,7 @@ public record KnifeStabPayload(int target) implements CustomPayload {
             target.playSound(WatheSounds.ITEM_KNIFE_STAB, 1.0f, 1.0f);
             player.swingHand(Hand.MAIN_HAND);
             if (!player.isCreative() && GameWorldComponent.KEY.get(context.player().getWorld()).getGameMode() != WatheGameModes.LOOSE_ENDS) {
-                player.getItemCooldownManager().set(WatheItems.KNIFE, GameConstants.ITEM_COOLDOWNS.get(WatheItems.KNIFE));
+                player.getItemCooldownManager().set(WatheItems.KNIFE, WatheConfig.knifeCooldownTicks);
             }
         }
     }

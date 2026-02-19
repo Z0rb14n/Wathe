@@ -2,6 +2,7 @@ package dev.doctor4t.wathe.game;
 
 import com.google.common.collect.Lists;
 import dev.doctor4t.wathe.Wathe;
+import dev.doctor4t.wathe.WatheConfig;
 import dev.doctor4t.wathe.api.GameMode;
 import dev.doctor4t.wathe.api.MapEffect;
 import dev.doctor4t.wathe.api.event.AllowPlayerDeath;
@@ -270,7 +271,7 @@ public class GameFunctions {
 
         if (killer != null) {
             if (GameWorldComponent.KEY.get(killer.getWorld()).canUseKillerFeatures(killer)) {
-                PlayerShopComponent.KEY.get(killer).addToBalance(GameConstants.MONEY_PER_KILL);
+                PlayerShopComponent.KEY.get(killer).addToBalance(WatheConfig.moneyPerKill);
             }
 
             // replenish derringer
@@ -311,7 +312,7 @@ public class GameFunctions {
 
         GameWorldComponent gameWorldComponent = GameWorldComponent.KEY.get(victim.getWorld());
         if (gameWorldComponent.isInnocent(victim)) {
-            GameTimeComponent.KEY.get(victim.getWorld()).addTime(GameConstants.TIME_ON_CIVILIAN_KILL);
+            GameTimeComponent.KEY.get(victim.getWorld()).addTime(WatheConfig.ticksOnCivilianKill);
         }
 
         TrainVoicePlugin.addPlayer(victim.getUuid());

@@ -43,6 +43,8 @@ public class Wathe implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        // Load config
+        WatheConfig.init(Wathe.MOD_ID, WatheConfig.class);
         // Init constants
         GameConstants.init();
 
@@ -63,6 +65,7 @@ public class Wathe implements ModInitializer {
         // Register commands
         CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> {
             MapVariablesCommand.register(dispatcher);
+            ReloadConfigCommand.register(dispatcher);
             GameSettingsCommand.register(dispatcher);
             GiveRoomKeyCommand.register(dispatcher);
             StartCommand.register(dispatcher);

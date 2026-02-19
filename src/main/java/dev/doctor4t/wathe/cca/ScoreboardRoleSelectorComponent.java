@@ -1,9 +1,9 @@
 package dev.doctor4t.wathe.cca;
 
 import dev.doctor4t.wathe.Wathe;
+import dev.doctor4t.wathe.WatheConfig;
 import dev.doctor4t.wathe.api.WatheRoles;
 import dev.doctor4t.wathe.client.gui.RoleAnnouncementTexts;
-import dev.doctor4t.wathe.game.GameConstants;
 import dev.doctor4t.wathe.index.WatheItems;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -138,7 +138,7 @@ public class ScoreboardRoleSelectorComponent implements AutoSyncedComponent {
             gameComponent.addRole(killerUUID, WatheRoles.KILLER);
             PlayerEntity killer = world.getPlayerByUuid(killerUUID);
             if (killer != null) {
-                PlayerShopComponent.KEY.get(killer).setBalance(GameConstants.MONEY_START);
+                PlayerShopComponent.KEY.get(killer).setBalance(WatheConfig.startingMoney);
             }
         }
         return killers.size();
