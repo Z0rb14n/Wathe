@@ -71,7 +71,7 @@ public class HornBlock extends BlockWithEntity {
                 GameWorldComponent gameWorldComponent = GameWorldComponent.KEY.get(serverWorld);
                 if (isOp && !gameWorldComponent.isRunning()) {
                     GameMode gameMode = WatheGameModes.MURDER;
-                    GameFunctions.startGame(serverWorld, gameMode, gameWorldComponent.getMapEffect(), GameConstants.getInTicks(gameMode.defaultStartTime, 0));
+                    GameFunctions.startGame(serverWorld, gameMode, WatheMapEffects.HARPY_EXPRESS_NIGHT, GameConstants.getInTicks(gameMode.defaultStartTime, 0));
                 }
 
                 hornBlockEntity.pull(1);
