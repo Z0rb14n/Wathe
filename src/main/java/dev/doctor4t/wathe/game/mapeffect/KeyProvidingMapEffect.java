@@ -20,15 +20,20 @@ public abstract class KeyProvidingMapEffect extends MapEffect {
     public KeyProvidingMapEffect(Identifier identifier) {
         super(identifier);
     }
+    protected void givePlayerKey(String keyName, ServerPlayerEntity player) {
+        ItemStack itemStack = new ItemStack(WatheItems.KEY);
+        itemStack.apply(DataComponentTypes.LORE, LoreComponent.DEFAULT, component -> new LoreComponent(Text.literal(keyName)
+                .getWithStyle(Style.EMPTY.withItalic(false).withColor(0xFF8C00))));
+        player.giveItemStack(itemStack);
+    }
+
     protected void provideKeys(ServerWorld serverWorld, List<ServerPlayerEntity> players, int rooms) {
         Collections.shuffle(players);
         int roomNumber = 0;
         for (ServerPlayerEntity serverPlayerEntity : players) {
-            ItemStack itemStack = new ItemStack(WatheItems.KEY);
             roomNumber = roomNumber % rooms + 1;
             int finalRoomNumber = roomNumber;
-            itemStack.apply(DataComponentTypes.LORE, LoreComponent.DEFAULT, component -> new LoreComponent(Text.literal("Room " + finalRoomNumber).getWithStyle(Style.EMPTY.withItalic(false).withColor(0xFF8C00))));
-            serverPlayerEntity.giveItemStack(itemStack);
+            givePlayerKey("Room " + finalRoomNumber, serverPlayerEntity);
 
             // give letter
             ItemStack letter = new ItemStack(WatheItems.LETTER);
