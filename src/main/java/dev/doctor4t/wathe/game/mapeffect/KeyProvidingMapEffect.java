@@ -27,7 +27,17 @@ public abstract class KeyProvidingMapEffect extends MapEffect {
         player.giveItemStack(itemStack);
     }
 
-    protected void provideKeys(ServerWorld serverWorld, List<ServerPlayerEntity> players, int rooms) {
+    protected void provideKeysOnly(ServerWorld serverWorld, List<ServerPlayerEntity> players, int rooms) {
+        Collections.shuffle(players);
+        int roomNumber = 0;
+        for (ServerPlayerEntity serverPlayerEntity : players) {
+            roomNumber = roomNumber % rooms + 1;
+            int finalRoomNumber = roomNumber;
+            givePlayerKey("Room " + finalRoomNumber, serverPlayerEntity);
+        }
+    }
+
+    protected void provideKeysAndLetters(ServerWorld serverWorld, List<ServerPlayerEntity> players, int rooms) {
         Collections.shuffle(players);
         int roomNumber = 0;
         for (ServerPlayerEntity serverPlayerEntity : players) {
@@ -67,10 +77,6 @@ public abstract class KeyProvidingMapEffect extends MapEffect {
             );
             serverPlayerEntity.giveItemStack(letter);
         }
-    }
-    @Override
-    public void initializeMapEffects(ServerWorld serverWorld, List<ServerPlayerEntity> players) {
-        provideKeys(serverWorld, players, 7);
     }
 
     @Override

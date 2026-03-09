@@ -24,7 +24,7 @@ public abstract class HarpyExpressTrainMapEffect extends KeyProvidingMapEffect {
         trainWorldComponent.setTime(0);
 
         // select rooms
-        provideKeys(serverWorld, players, 7);
+        provideKeysAndLetters(serverWorld, players, 7);
     }
 
     @Override

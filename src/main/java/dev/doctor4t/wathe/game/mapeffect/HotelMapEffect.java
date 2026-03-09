@@ -11,12 +11,12 @@ public class HotelMapEffect extends KeyProvidingMapEffect {
     private final String[] extraKeys;
     public HotelMapEffect(Identifier identifier) {
         super(identifier);
-        extraKeys = new String[]{"Storage Room", "Bar", "Kitchen"};
+        extraKeys = new String[]{"Kitchen"};
     }
 
     @Override
     public void initializeMapEffects(ServerWorld serverWorld, List<ServerPlayerEntity> players) {
-        super.initializeMapEffects(serverWorld, players);
+        provideKeysOnly(serverWorld, players, 7);
         Collections.shuffle(players);
         for (int i = 0; i < extraKeys.length; i++) {
             String key = extraKeys[i];
