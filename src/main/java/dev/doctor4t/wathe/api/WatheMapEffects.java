@@ -20,11 +20,16 @@ public class WatheMapEffects {
     public static final MapEffect HARPY_EXPRESS_NIGHT = registerMapEffect(HARPY_EXPRESS_NIGHT_ID, new HarpyExpressNightTrainMapEffect(HARPY_EXPRESS_NIGHT_ID));
     public static final MapEffect HARPY_EXPRESS_DAY = registerMapEffect(HARPY_EXPRESS_DAY_ID, new HarpyExpressDayTrainMapEffect(HARPY_EXPRESS_DAY_ID));
     public static final MapEffect HARPY_EXPRESS_SUNDOWN = registerMapEffect(HARPY_EXPRESS_SUNDOWN_ID, new HarpyExpressSundownTrainMapEffect(HARPY_EXPRESS_SUNDOWN_ID));
+    @SuppressWarnings("unused")
     public static final MapEffect HOTEL = registerMapEffect(HOTEL_ID, new HotelMapEffect(HOTEL_ID));
     public static final MapEffect GENERIC = registerMapEffect(GENERIC_ID, new GenericMapEffect(GENERIC_ID));
 
     public static MapEffect registerMapEffect(Identifier identifier, MapEffect mapEffect) {
         MAP_EFFECTS.put(identifier, mapEffect);
         return mapEffect;
+    }
+
+    public static MapEffect getMapEffect(String id) {
+        return MAP_EFFECTS.get(Wathe.id(id));
     }
 }

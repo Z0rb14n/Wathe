@@ -1,6 +1,7 @@
 package dev.doctor4t.wathe.block;
 
 import com.mojang.serialization.MapCodec;
+import dev.doctor4t.wathe.WatheConfig;
 import dev.doctor4t.wathe.api.GameMode;
 import dev.doctor4t.wathe.api.WatheGameModes;
 import dev.doctor4t.wathe.api.WatheMapEffects;
@@ -71,7 +72,7 @@ public class HornBlock extends BlockWithEntity {
                 GameWorldComponent gameWorldComponent = GameWorldComponent.KEY.get(serverWorld);
                 if (isOp && !gameWorldComponent.isRunning()) {
                     GameMode gameMode = WatheGameModes.MURDER;
-                    GameFunctions.startGame(serverWorld, gameMode, WatheMapEffects.HOTEL, GameConstants.getInTicks(gameMode.defaultStartTime, 0));
+                    GameFunctions.startGame(serverWorld, gameMode, WatheMapEffects.getMapEffect(WatheConfig.hornBlockMapEffectId), GameConstants.getInTicks(gameMode.defaultStartTime, 0));
                 }
 
                 hornBlockEntity.pull(1);

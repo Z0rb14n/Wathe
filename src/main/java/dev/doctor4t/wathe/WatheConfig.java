@@ -92,6 +92,9 @@ public class WatheConfig extends MidnightConfig {
     @Server
     @Entry(category = "GameConstants", min = 0)
     public static int gunRange = 65;
+    @Server
+    @Entry(category = "GameConstants")
+    public static String hornBlockMapEffectId = "hotel";
 
     @Override
     public void writeChanges(String modid) {
