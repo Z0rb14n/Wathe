@@ -29,6 +29,8 @@ import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.function.Predicate;
+
 public record GunShootPayload(int target) implements CustomPayload {
     public static final Id<GunShootPayload> ID = new Id<>(Wathe.id("gunshoot"));
     public static final PacketCodec<PacketByteBuf, GunShootPayload> CODEC = PacketCodec.tuple(PacketCodecs.INTEGER, GunShootPayload::target, GunShootPayload::new);
@@ -67,7 +69,7 @@ public record GunShootPayload(int target) implements CustomPayload {
             if (payload.target() == -1 && WatheConfig.gunRange > RevolverItem.CLIENT_GUN_RANGE) {
                 // hacky server side logic
                 // lag compensation? what's that?
-                HitResult hitResult = ProjectileUtil.getCollision(player, e -> e instanceof PlayerEntity otherPlayer && GameFunctions.isPlayerAliveAndSurvival(otherPlayer), WatheConfig.gunRange);
+                HitResult hitResult = ProjectileUtil.getCollision(player, new PlayerPredicate(), WatheConfig.gunRange);
                 if (hitResult instanceof EntityHitResult entityHitResult) {
                     entity = entityHitResult.getEntity();
                 }
@@ -111,6 +113,15 @@ public record GunShootPayload(int target) implements CustomPayload {
             ServerPlayNetworking.send(player, new ShootMuzzleS2CPayload(player.getUuidAsString()));
             if (!player.isCreative())
                 player.getItemCooldownManager().set(mainHandStack.getItem(), GameConstants.ITEM_COOLDOWNS.getOrDefault(mainHandStack.getItem(), 0));
+        }
+
+        // create a predicate rather than a lambda to prevent conflicts with More Shooter Punishments
+        private static class PlayerPredicate implements Predicate<Entity> {
+
+            @Override
+            public boolean test(Entity entity) {
+                return entity instanceof PlayerEntity otherPlayer && GameFunctions.isPlayerAliveAndSurvival(otherPlayer);
+            }
         }
     }
 }
