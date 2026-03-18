@@ -66,10 +66,9 @@ public class PoisonUtils {
         if (blockEntity == null) return;
 
         if (!world.isClient) {
+            UUID poisoner = blockEntity.getPoisoner();
             blockEntity.setHasScorpion(false, null);
             int poisonTicks = PlayerPoisonComponent.KEY.get(player).poisonTicks;
-
-            UUID poisoner = blockEntity.getPoisoner();
 
             if (poisonTicks == -1) {
                 PlayerPoisonComponent.KEY.get(player).setPoisonTicks(
