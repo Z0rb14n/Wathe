@@ -23,6 +23,7 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.network.packet.CustomPayload;
+import net.minecraft.registry.Registries;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.hit.EntityHitResult;
@@ -67,11 +68,14 @@ public record GunShootPayload(int target) implements CustomPayload {
             Entity entity = player.getServerWorld().getEntityById(payload.target());
 
             if (payload.target() == -1 && WatheConfig.gunRange > RevolverItem.CLIENT_GUN_RANGE) {
-                // hacky server side logic
-                // lag compensation? what's that?
-                HitResult hitResult = ProjectileUtil.getCollision(player, new PlayerPredicate(), WatheConfig.gunRange);
-                if (hitResult instanceof EntityHitResult entityHitResult) {
-                    entity = entityHitResult.getEntity();
+                // fix noelle's roles fake gun being actually working
+                if (!Registries.ITEM.getId(mainHandStack.getItem()).getPath().contains("fake_revolver")) {
+                    // hacky server side logic
+                    // lag compensation? what's that?
+                    HitResult hitResult = ProjectileUtil.getCollision(player, new PlayerPredicate(), WatheConfig.gunRange);
+                    if (hitResult instanceof EntityHitResult entityHitResult) {
+                        entity = entityHitResult.getEntity();
+                    }
                 }
             }
 
