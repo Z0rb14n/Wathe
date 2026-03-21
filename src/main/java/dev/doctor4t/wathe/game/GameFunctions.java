@@ -13,6 +13,7 @@ import dev.doctor4t.wathe.compat.TrainVoicePlugin;
 import dev.doctor4t.wathe.entity.FirecrackerEntity;
 import dev.doctor4t.wathe.entity.NoteEntity;
 import dev.doctor4t.wathe.entity.PlayerBodyEntity;
+import dev.doctor4t.wathe.game.mapeffect.CustomConfigMapEffect;
 import dev.doctor4t.wathe.index.WatheDataComponentTypes;
 import dev.doctor4t.wathe.index.WatheEntities;
 import dev.doctor4t.wathe.index.WatheItems;
@@ -191,6 +192,10 @@ public class GameFunctions {
 
     public static void finalizeGame(ServerWorld world) {
         GameWorldComponent gameComponent = GameWorldComponent.KEY.get(world);
+        if (gameComponent.getMapEffect() instanceof CustomConfigMapEffect customConfigMap) {
+            // why don't we call finalize??????
+            customConfigMap.finalizeMapEffects(world, world.getPlayers());
+        }
         GameEvents.ON_GAME_STOP.invoker().onGameStop(gameComponent.getGameMode());
         gameComponent.getGameMode().finalizeGame(world, gameComponent);
 

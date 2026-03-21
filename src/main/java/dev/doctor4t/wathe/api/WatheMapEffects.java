@@ -16,6 +16,7 @@ public class WatheMapEffects {
     public static final Identifier HOTEL_ID = Wathe.id("hotel");
     public static final Identifier GENERIC_ID = Wathe.id("generic");
     public static final Identifier FNAF_TEST_ID = Wathe.id("fnaf_test");
+    public static final Identifier CUSTOM_ID = Wathe.id("custom");
 
     public static final MapEffect HARPY_EXPRESS_LOBBY = registerMapEffect(HARPY_EXPRESS_LOBBY_ID, new HarpyExpressLobbyMapEffect(HARPY_EXPRESS_LOBBY_ID));
     public static final MapEffect HARPY_EXPRESS_NIGHT = registerMapEffect(HARPY_EXPRESS_NIGHT_ID, new HarpyExpressNightTrainMapEffect(HARPY_EXPRESS_NIGHT_ID));
@@ -23,6 +24,8 @@ public class WatheMapEffects {
     public static final MapEffect HARPY_EXPRESS_SUNDOWN = registerMapEffect(HARPY_EXPRESS_SUNDOWN_ID, new HarpyExpressSundownTrainMapEffect(HARPY_EXPRESS_SUNDOWN_ID));
     @SuppressWarnings("unused")
     public static final MapEffect HOTEL = registerMapEffect(HOTEL_ID, new HotelMapEffect(HOTEL_ID));
+    @SuppressWarnings("unused")
+    public static final MapEffect CUSTOM = registerMapEffect(CUSTOM_ID, new CustomConfigMapEffect(CUSTOM_ID));
     public static final MapEffect GENERIC = registerMapEffect(GENERIC_ID, new GenericMapEffect(GENERIC_ID));
     @SuppressWarnings("unused")
     public static final MapEffect FNAF_TEST = registerMapEffect(FNAF_TEST_ID, new FNAFTestMapEffect(FNAF_TEST_ID));

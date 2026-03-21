@@ -95,6 +95,30 @@ public class WatheConfig extends MidnightConfig {
     @Server
     @Entry(category = "GameConstants")
     public static String hornBlockMapEffectId = "hotel";
+    @Server
+    @Entry(category = "CustomMap")
+    public static boolean customMapHasTimeOfDay = false;
+    @Server
+    @Entry(category = "CustomMap")
+    public static int customMapTimeOfDay = 18000;
+    @Server
+    @Entry(category = "CustomMap")
+    public static boolean customMapHasWeather = false;
+    @Server
+    @Entry(category = "CustomMap")
+    public static boolean customMapRaining = false;
+    @Server
+    @Entry(category = "CustomMap")
+    public static boolean customMapThundering = false;
+    @Server
+    @Entry(category = "CustomMap")
+    public static String customMapUniqueKeys = "";
+    @Server
+    @Entry(category = "CustomMap")
+    public static String customMapGuaranteedKeys = "";
+    @Server
+    @Entry(category = "CustomMap", min = 0)
+    public static int customMapNumRoomKeys = 7;
 
     @Override
     public void writeChanges(String modid) {
