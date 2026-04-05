@@ -10,6 +10,8 @@ public class WatheConfig extends MidnightConfig {
     public static boolean ultraPerfMode = false;
     @Entry
     public static boolean disableScreenShake = false;
+    @Entry(min = 3, max = 10000)
+    public static int gunRange = 15;
 
     @Override
     public void writeChanges(String modid) {
