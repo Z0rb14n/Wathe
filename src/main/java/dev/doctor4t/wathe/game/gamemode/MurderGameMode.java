@@ -1,5 +1,6 @@
 package dev.doctor4t.wathe.game.gamemode;
 
+import dev.doctor4t.wathe.Wathe;
 import dev.doctor4t.wathe.api.GameMode;
 import dev.doctor4t.wathe.api.WatheRoles;
 import dev.doctor4t.wathe.cca.*;
@@ -83,6 +84,7 @@ public class MurderGameMode extends GameMode {
         // game end on win and display
         if (winStatus != GameFunctions.WinStatus.NONE && gameWorldComponent.getGameStatus() == GameWorldComponent.GameStatus.ACTIVE) {
             GameRoundEndComponent.KEY.get(serverWorld).setRoundEndData(serverWorld.getPlayers(), winStatus);
+            Wathe.PERSISTENCE.persistFinishedGame(serverWorld, winStatus);
 
             GameFunctions.stopGame(serverWorld);
         }

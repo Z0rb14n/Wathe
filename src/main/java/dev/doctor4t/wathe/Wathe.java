@@ -9,6 +9,8 @@ import dev.doctor4t.wathe.command.argument.MapEffectArgumentType;
 import dev.doctor4t.wathe.command.argument.TimeOfDayArgumentType;
 import dev.doctor4t.wathe.game.GameConstants;
 import dev.doctor4t.wathe.index.*;
+import dev.doctor4t.wathe.tracking.Persistence;
+import dev.doctor4t.wathe.tracking.SQLitePersistence;
 import dev.doctor4t.wathe.util.*;
 import dev.upcraft.datasync.api.DataSyncAPI;
 import dev.upcraft.datasync.api.util.Entitlements;
@@ -35,6 +37,8 @@ import java.util.Optional;
 public class Wathe implements ModInitializer {
     public static final String MOD_ID = "wathe";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+    // todo do this better, I cba and it's 11pm for now
+    public static final Persistence PERSISTENCE = new SQLitePersistence();
 
     public static @NotNull Identifier id(String name) {
         return Identifier.of(MOD_ID, name);
