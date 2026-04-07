@@ -124,7 +124,9 @@ public class Wathe implements ModInitializer {
                             String.format("%.1f", player.getX()), String.format("%.1f", player.getY()), String.format("%.1f", player.getZ()));
                 }
             }, 3);
-            ServerPlayNetworking.send(player, ConfigSyncPayload.fromConfig());
+            if (ServerPlayNetworking.canSend(player, ConfigSyncPayload.ID)) {
+                ServerPlayNetworking.send(player, ConfigSyncPayload.fromConfig());
+            }
             DataSyncAPI.refreshAllPlayerData(player.getUuid()).thenRunAsync(() -> {
                 // check if player is supporter now, if not kick
                 if (GameWorldComponent.KEY.get(player.getWorld()).isLockedToSupporters() && !Wathe.isSupporter(player)) {

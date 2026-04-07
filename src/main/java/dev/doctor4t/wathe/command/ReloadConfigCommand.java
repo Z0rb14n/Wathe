@@ -24,7 +24,9 @@ public class ReloadConfigCommand {
         // Sync updated config to all connected players
         ConfigSyncPayload payload = ConfigSyncPayload.fromConfig();
         for (ServerPlayerEntity player : context.getSource().getServer().getPlayerManager().getPlayerList()) {
-            ServerPlayNetworking.send(player, payload);
+            if (ServerPlayNetworking.canSend(player, ConfigSyncPayload.ID)) {
+                ServerPlayNetworking.send(player, payload);
+            }
         }
         return 1;
     }
