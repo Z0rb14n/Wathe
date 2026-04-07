@@ -67,7 +67,7 @@ public record GunShootPayload(int target) implements CustomPayload {
 
             Entity entity = player.getServerWorld().getEntityById(payload.target());
 
-            if (payload.target() == -1 && WatheConfig.gunRange > RevolverItem.CLIENT_GUN_RANGE) {
+            if (payload.target() == -1 && WatheConfig.gunRange > RevolverItem.clientGunRange) {
                 // fix noelle's roles fake gun being actually working
                 if (!Registries.ITEM.getId(mainHandStack.getItem()).getPath().contains("fake_revolver")) {
                     // hacky server side logic
