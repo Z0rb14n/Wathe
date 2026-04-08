@@ -10,7 +10,6 @@ import dev.doctor4t.wathe.index.WatheDataComponentTypes;
 import dev.doctor4t.wathe.index.WatheItems;
 import dev.doctor4t.wathe.index.WatheSounds;
 import dev.doctor4t.wathe.index.tag.WatheItemTags;
-import dev.doctor4t.wathe.item.RevolverItem;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.Entity;
@@ -42,6 +41,8 @@ public record GunShootPayload(int target) implements CustomPayload {
     }
 
     public static class Receiver implements ServerPlayNetworking.PlayPayloadHandler<GunShootPayload> {
+        private static final float UNPATCHED_CLIENT_GUN_RANGE = 15f;
+
         @Override
         public void receive(@NotNull GunShootPayload payload, ServerPlayNetworking.@NotNull Context context) {
             ServerPlayerEntity player = context.player();
@@ -67,7 +68,7 @@ public record GunShootPayload(int target) implements CustomPayload {
 
             Entity entity = player.getServerWorld().getEntityById(payload.target());
 
-            if (payload.target() == -1 && WatheConfig.gunRange > RevolverItem.clientGunRange) {
+            if (payload.target() == -1 && WatheConfig.gunRange > UNPATCHED_CLIENT_GUN_RANGE) {
                 // fix noelle's roles fake gun being actually working
                 if (!Registries.ITEM.getId(mainHandStack.getItem()).getPath().contains("fake_revolver")) {
                     // hacky server side logic
@@ -79,7 +80,7 @@ public record GunShootPayload(int target) implements CustomPayload {
                 }
             }
 
-            if (entity instanceof PlayerEntity target && target.distanceTo(player) < WatheConfig.gunRange) {
+            if (entity instanceof PlayerEntity target && isWithinRange(player, target)) {
                 GameWorldComponent game = GameWorldComponent.KEY.get(player.getWorld());
                 Item revolver = WatheItems.REVOLVER;
 
@@ -117,6 +118,22 @@ public record GunShootPayload(int target) implements CustomPayload {
             ServerPlayNetworking.send(player, new ShootMuzzleS2CPayload(player.getUuidAsString()));
             if (!player.isCreative())
                 player.getItemCooldownManager().set(mainHandStack.getItem(), GameConstants.ITEM_COOLDOWNS.getOrDefault(mainHandStack.getItem(), 0));
+        }
+
+        private static boolean isWithinRange(ServerPlayerEntity shooter, PlayerEntity target) {
+            if (target.distanceTo(shooter) < WatheConfig.gunRange) return true;
+
+            // Find the closest point on target hitbox to shooter eyes
+            double closestX = Math.max(target.getX() - target.getWidth() / 2.0, Math.min(shooter.getX(), target.getX() + target.getWidth() / 2.0));
+            double closestY = Math.max(target.getY(), Math.min(shooter.getEyeY(), target.getY() + target.getHeight()));
+            double closestZ = Math.max(target.getZ() - target.getWidth() / 2.0, Math.min(shooter.getZ(), target.getZ() + target.getWidth() / 2.0));
+
+            double dx = closestX - shooter.getX();
+            double dy = closestY - shooter.getEyeY();
+            double dz = closestZ - shooter.getZ();
+            double eyeToBoxDist = Math.sqrt(dx * dx + dy * dy + dz * dz);
+
+            return eyeToBoxDist < WatheConfig.gunRange;
         }
 
         // create a predicate rather than a lambda to prevent conflicts with More Shooter Punishments
