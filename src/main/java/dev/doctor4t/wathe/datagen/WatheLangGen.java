@@ -158,7 +158,7 @@ public class WatheLangGen extends FabricLanguageProvider {
 
         builder.add("wathe.midnightconfig.title", "The Last Voyage of the Harpy Express - Config");
         builder.add("wathe.midnightconfig.ultraPerfMode", "Ultra Performance Mode");
-        builder.add("wathe.midnightconfig.ultraPerfMode.tooltip", "Disables scenery for a worse visual experience but maximum performance. Lowers render distance to 2.");
+        builder.add("wathe.midnightconfig.ultraPerfMode.tooltip", "Restricts chunk rendering to train height for maximum performance.");
         builder.add("wathe.midnightconfig.disableScreenShake", "Disable Screen Shake");
 
         builder.add("wathe.argument.game_mode.invalid", "Game mode could not be found");

@@ -3,8 +3,13 @@
   "package": "dev.doctor4t.wathe.mixin",
   "compatibilityLevel": "JAVA_17",
   "plugin": "dev.doctor4t.wathe.mixin.TmmMixinPlugin",
+  "server": [
+    "MinecraftServerAccessor",
+    "PlayerManagerMixin"
+  ],
   "mixins": [
     "AbstractBlockInvoker",
+    "DimensionTypeMixin",
     "AbstractBlockSettingsMixin",
     "DedicatedPlayerManagerMixin",
     "EntityMixin",

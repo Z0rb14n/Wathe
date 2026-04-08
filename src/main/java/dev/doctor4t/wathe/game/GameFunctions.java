@@ -14,6 +14,7 @@ import dev.doctor4t.wathe.entity.FirecrackerEntity;
 import dev.doctor4t.wathe.entity.NoteEntity;
 import dev.doctor4t.wathe.entity.PlayerBodyEntity;
 import dev.doctor4t.wathe.game.mapeffect.CustomConfigMapEffect;
+import dev.doctor4t.wathe.world.WatheMapWorlds;
 import dev.doctor4t.wathe.index.WatheDataComponentTypes;
 import dev.doctor4t.wathe.index.WatheEntities;
 import dev.doctor4t.wathe.index.WatheItems;
@@ -342,9 +343,7 @@ public class GameFunctions {
     }
 
     enum Mode {
-        FORCE(true),
-        MOVE(true),
-        NORMAL(false);
+        FORCE(true), MOVE(true), NORMAL(false);
 
         private final boolean allowsOverlap;
 
@@ -359,7 +358,7 @@ public class GameFunctions {
 
     // returns whether another reset should be attempted
     public static boolean tryResetTrain(ServerWorld serverWorld) {
-        if (serverWorld.getServer().getOverworld().equals(serverWorld)) {
+        if (WatheMapWorlds.isGameWorld(serverWorld)) {
             MapVariablesWorldComponent areas = MapVariablesWorldComponent.KEY.get(serverWorld);
             BlockPos backupMinPos = BlockPos.ofFloored(areas.getResetTemplateArea().getMinPos());
             BlockPos backupMaxPos = BlockPos.ofFloored(areas.getResetTemplateArea().getMaxPos());
@@ -375,9 +374,7 @@ public class GameFunctions {
                 List<BlockInfo> list2 = Lists.newArrayList();
                 List<BlockInfo> list3 = Lists.newArrayList();
                 Deque<BlockPos> deque = Lists.newLinkedList();
-                BlockPos blockPos5 = new BlockPos(
-                        trainBox.getMinX() - backupTrainBox.getMinX(), trainBox.getMinY() - backupTrainBox.getMinY(), trainBox.getMinZ() - backupTrainBox.getMinZ()
-                );
+                BlockPos blockPos5 = new BlockPos(trainBox.getMinX() - backupTrainBox.getMinX(), trainBox.getMinY() - backupTrainBox.getMinY(), trainBox.getMinZ() - backupTrainBox.getMinZ());
 
                 for (int k = backupTrainBox.getMinZ(); k <= backupTrainBox.getMaxZ(); k++) {
                     for (int l = backupTrainBox.getMinY(); l <= backupTrainBox.getMaxY(); l++) {
@@ -389,9 +386,7 @@ public class GameFunctions {
 
                             BlockEntity blockEntity = serverWorld.getBlockEntity(blockPos6);
                             if (blockEntity != null) {
-                                BlockEntityInfo blockEntityInfo = new BlockEntityInfo(
-                                        blockEntity.createComponentlessNbt(serverWorld.getRegistryManager()), blockEntity.getComponents()
-                                );
+                                BlockEntityInfo blockEntityInfo = new BlockEntityInfo(blockEntity.createComponentlessNbt(serverWorld.getRegistryManager()), blockEntity.getComponents());
                                 list2.add(new BlockInfo(blockPos7, blockState, blockEntityInfo));
                                 deque.addLast(blockPos6);
                             } else if (!blockState.isOpaqueFullCube(serverWorld, blockPos6) && !blockState.isFullCube(serverWorld, blockPos6)) {

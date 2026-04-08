@@ -3,10 +3,14 @@ package dev.doctor4t.wathe;
 import com.google.common.reflect.Reflection;
 import dev.doctor4t.wathe.block.DoorPartBlock;
 import dev.doctor4t.wathe.cca.GameWorldComponent;
+import dev.doctor4t.wathe.cca.MapVariablesWorldComponent;
 import dev.doctor4t.wathe.command.*;
 import dev.doctor4t.wathe.command.argument.GameModeArgumentType;
 import dev.doctor4t.wathe.command.argument.MapEffectArgumentType;
 import dev.doctor4t.wathe.command.argument.TimeOfDayArgumentType;
+import dev.doctor4t.wathe.world.WatheMapWorlds;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.TeleportTarget;
 import dev.doctor4t.wathe.game.GameConstants;
 import dev.doctor4t.wathe.index.*;
 import dev.doctor4t.wathe.tracking.Persistence;
@@ -16,8 +20,10 @@ import dev.upcraft.datasync.api.DataSyncAPI;
 import dev.upcraft.datasync.api.util.Entitlements;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.ArgumentTypeRegistry;
+import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
+// [WATHE_PERSISTENT_MAP] import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.command.argument.serialize.ConstantArgumentSerializer;
@@ -79,10 +85,26 @@ public class Wathe implements ModInitializer {
             SetTimerCommand.register(dispatcher);
             SetMoneyCommand.register(dispatcher);
             LockToSupportersCommand.register(dispatcher);
+            MapCommand.register(dispatcher);
         }));
 
-        // server lock to supporters
+        // Auto-load the last used map world on startup
+        // [WATHE_PERSISTENT_MAP] ServerLifecycleEvents.SERVER_STARTED.register(WatheMapWorlds::autoLoad);
+
+        // Redirect players to the active map world on respawn (vanilla always respawns in minecraft:overworld)
+        ServerPlayerEvents.AFTER_RESPAWN.register((oldPlayer, newPlayer, alive) -> {
+            String mapName = WatheMapWorlds.getCurrentMapName();
+            if (mapName == null) return;
+            if (WatheMapWorlds.isMapWorldKey(newPlayer.getServerWorld().getRegistryKey())) return;
+            WatheMapWorlds.getLoaded(newPlayer.getServer(), mapName).ifPresent(target -> {
+                MapVariablesWorldComponent.PosWithOrientation spawn = MapVariablesWorldComponent.KEY.get(target).getSpawnPos();
+                newPlayer.teleportTo(new TeleportTarget(target, spawn.pos, Vec3d.ZERO, spawn.yaw, spawn.pitch, TeleportTarget.NO_OP));
+            });
+        });
+
+        // server lock to supporters; also redirect players from hub to current map
         ServerPlayerEvents.JOIN.register(player -> {
+            // [WATHE_PERSISTENT_MAP] WatheMapWorlds.redirectFromHub(player);
             DataSyncAPI.refreshAllPlayerData(player.getUuid()).thenRunAsync(() -> {
                 // check if player is supporter now, if not kick
                 if (GameWorldComponent.KEY.get(player.getWorld()).isLockedToSupporters() && !Wathe.isSupporter(player)) {

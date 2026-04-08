@@ -84,9 +84,6 @@ public class WatheClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        // Load config
-        WatheConfig.init(Wathe.MOD_ID, WatheConfig.class);
-
         // Initialize ScreenParticle
         handParticleManager = new HandParticleManager();
         particleMap = new HashMap<>();
@@ -216,7 +213,7 @@ public class WatheClient implements ClientModInitializer {
 
         // Lock options
         OptionLocker.overrideOption("gamma", 0d);
-        OptionLocker.overrideOption("renderDistance", getLockedRenderDistance(WatheConfig.ultraPerfMode)); // mfw 15 fps on a 3050 - Cup // haha 🫵 brokie - RAT // buy me a better one then - Cup // okay nvm I fixed it I was actually rendering a lot of empty chunks we didn't need my bad LMAO - RAT
+        // OptionLocker.overrideOption("renderDistance", getLockedRenderDistance(WatheConfig.ultraPerfMode)); // mfw 15 fps on a 3050 - Cup // haha 🫵 brokie - RAT // buy me a better one then - Cup // okay nvm I fixed it I was actually rendering a lot of empty chunks we didn't need my bad LMAO - RAT
         OptionLocker.overrideOption("showSubtitles", false);
         OptionLocker.overrideOption("autoJump", false);
         OptionLocker.overrideOption("renderClouds", CloudRenderMode.OFF);

@@ -4,6 +4,7 @@ import dev.doctor4t.wathe.Wathe;
 import dev.doctor4t.wathe.api.*;
 import dev.doctor4t.wathe.game.GameConstants;
 import dev.doctor4t.wathe.game.GameFunctions;
+import dev.doctor4t.wathe.world.WatheMapWorlds;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
@@ -148,6 +149,7 @@ public class GameWorldComponent implements AutoSyncedComponent, ServerTickingCom
 
         return ret;
     }
+
     public List<UUID> getAllWithRole(Role role) {
         List<UUID> ret = new ArrayList<>();
         roles.forEach((uuid, playerRole) -> {
@@ -170,6 +172,7 @@ public class GameWorldComponent implements AutoSyncedComponent, ServerTickingCom
     public boolean canUseKillerFeatures(@NotNull PlayerEntity player) {
         return getRole(player) != null && getRole(player).canUseKiller();
     }
+
     public boolean isInnocent(@NotNull PlayerEntity player) {
         return getRole(player) != null && getRole(player).isInnocent();
     }
@@ -364,7 +367,7 @@ public class GameWorldComponent implements AutoSyncedComponent, ServerTickingCom
             }
         }
 
-        if (serverWorld.getServer().getOverworld().equals(serverWorld)) {
+        if (WatheMapWorlds.isGameWorld(serverWorld)) {
             TrainWorldComponent trainComponent = TrainWorldComponent.KEY.get(serverWorld);
 
             // spectator limits
@@ -417,10 +420,8 @@ public class GameWorldComponent implements AutoSyncedComponent, ServerTickingCom
 
             if (this.getFade() >= GameConstants.FADE_TIME + GameConstants.FADE_PAUSE) {
                 if (world instanceof ServerWorld serverWorld) {
-                    if (this.getGameStatus() == GameStatus.STARTING)
-                        GameFunctions.initializeGame(serverWorld);
-                    if (this.getGameStatus() == GameStatus.STOPPING)
-                        GameFunctions.finalizeGame(serverWorld);
+                    if (this.getGameStatus() == GameStatus.STARTING) GameFunctions.initializeGame(serverWorld);
+                    if (this.getGameStatus() == GameStatus.STOPPING) GameFunctions.finalizeGame(serverWorld);
                 }
             }
         } else if (this.getGameStatus() == GameStatus.ACTIVE || this.getGameStatus() == GameStatus.INACTIVE) {
