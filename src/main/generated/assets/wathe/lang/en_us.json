@@ -350,5 +350,5 @@
   "wathe.midnightconfig.disableScreenShake": "Disable Screen Shake",
   "wathe.midnightconfig.title": "The Last Voyage of the Harpy Express - Config",
   "wathe.midnightconfig.ultraPerfMode": "Ultra Performance Mode",
-  "wathe.midnightconfig.ultraPerfMode.tooltip": "Disables scenery for a worse visual experience but maximum performance. Lowers render distance to 2."
+  "wathe.midnightconfig.ultraPerfMode.tooltip": "Restricts chunk rendering to train height for maximum performance."
 }
