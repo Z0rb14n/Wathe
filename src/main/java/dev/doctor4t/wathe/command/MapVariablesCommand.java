@@ -1,6 +1,8 @@
 package dev.doctor4t.wathe.command;
 
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.BoolArgumentType;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import dev.doctor4t.wathe.Wathe;
@@ -154,6 +156,51 @@ public class MapVariablesCommand {
                                                 )
                                         )
                                 )
+                                .then(CommandManager.literal("customMapHasTimeOfDay")
+                                        .then(CommandManager.argument("value", BoolArgumentType.bool())
+                                                .executes(context -> setValue(context.getSource(), "customMapHasTimeOfDay",
+                                                        BoolArgumentType.getBool(context, "value"),
+                                                        v -> getMapVarsComponent(context).setCustomMapHasTimeOfDay(v)))))
+                                .then(CommandManager.literal("customMapTimeOfDay")
+                                        .then(CommandManager.argument("value", IntegerArgumentType.integer(0))
+                                                .executes(context -> setValue(context.getSource(), "customMapTimeOfDay",
+                                                        IntegerArgumentType.getInteger(context, "value"),
+                                                        v -> getMapVarsComponent(context).setCustomMapTimeOfDay(v)))))
+                                .then(CommandManager.literal("customMapHasWeather")
+                                        .then(CommandManager.argument("value", BoolArgumentType.bool())
+                                                .executes(context -> setValue(context.getSource(), "customMapHasWeather",
+                                                        BoolArgumentType.getBool(context, "value"),
+                                                        v -> getMapVarsComponent(context).setCustomMapHasWeather(v)))))
+                                .then(CommandManager.literal("customMapRaining")
+                                        .then(CommandManager.argument("value", BoolArgumentType.bool())
+                                                .executes(context -> setValue(context.getSource(), "customMapRaining",
+                                                        BoolArgumentType.getBool(context, "value"),
+                                                        v -> getMapVarsComponent(context).setCustomMapRaining(v)))))
+                                .then(CommandManager.literal("customMapThundering")
+                                        .then(CommandManager.argument("value", BoolArgumentType.bool())
+                                                .executes(context -> setValue(context.getSource(), "customMapThundering",
+                                                        BoolArgumentType.getBool(context, "value"),
+                                                        v -> getMapVarsComponent(context).setCustomMapThundering(v)))))
+                                .then(CommandManager.literal("customMapUniqueKeys")
+                                        .then(CommandManager.argument("value", StringArgumentType.greedyString())
+                                                .executes(context -> setValue(context.getSource(), "customMapUniqueKeys",
+                                                        StringArgumentType.getString(context, "value"),
+                                                        v -> getMapVarsComponent(context).setCustomMapUniqueKeys(v)))))
+                                .then(CommandManager.literal("customMapGuaranteedKeys")
+                                        .then(CommandManager.argument("value", StringArgumentType.greedyString())
+                                                .executes(context -> setValue(context.getSource(), "customMapGuaranteedKeys",
+                                                        StringArgumentType.getString(context, "value"),
+                                                        v -> getMapVarsComponent(context).setCustomMapGuaranteedKeys(v)))))
+                                .then(CommandManager.literal("customMapNumRoomKeys")
+                                        .then(CommandManager.argument("value", IntegerArgumentType.integer(0))
+                                                .executes(context -> setValue(context.getSource(), "customMapNumRoomKeys",
+                                                        IntegerArgumentType.getInteger(context, "value"),
+                                                        v -> getMapVarsComponent(context).setCustomMapNumRoomKeys(v)))))
+                                .then(CommandManager.literal("customMapRoomKeyString")
+                                        .then(CommandManager.argument("value", StringArgumentType.greedyString())
+                                                .executes(context -> setValue(context.getSource(), "customMapRoomKeyString",
+                                                        StringArgumentType.getString(context, "value"),
+                                                        v -> getMapVarsComponent(context).setCustomMapRoomKeyString(v)))))
                         )
         );
     }

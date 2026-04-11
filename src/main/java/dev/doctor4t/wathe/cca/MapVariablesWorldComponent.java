@@ -37,6 +37,17 @@ public class MapVariablesWorldComponent implements AutoSyncedComponent {
 
     String hornBlockMapEffectId = "hotel";
 
+    // Custom map config
+    boolean customMapHasTimeOfDay = false;
+    int customMapTimeOfDay = 18000;
+    boolean customMapHasWeather = false;
+    boolean customMapRaining = false;
+    boolean customMapThundering = false;
+    String customMapUniqueKeys = "";
+    String customMapGuaranteedKeys = "";
+    int customMapNumRoomKeys = 7;
+    String customMapRoomKeyString = "Room %d";
+
     public PosWithOrientation getSpawnPos() {
         return spawnPos;
     }
@@ -109,6 +120,33 @@ public class MapVariablesWorldComponent implements AutoSyncedComponent {
         this.sync();
     }
 
+    public boolean isCustomMapHasTimeOfDay() { return customMapHasTimeOfDay; }
+    public void setCustomMapHasTimeOfDay(boolean v) { this.customMapHasTimeOfDay = v; this.sync(); }
+
+    public int getCustomMapTimeOfDay() { return customMapTimeOfDay; }
+    public void setCustomMapTimeOfDay(int v) { this.customMapTimeOfDay = v; this.sync(); }
+
+    public boolean isCustomMapHasWeather() { return customMapHasWeather; }
+    public void setCustomMapHasWeather(boolean v) { this.customMapHasWeather = v; this.sync(); }
+
+    public boolean isCustomMapRaining() { return customMapRaining; }
+    public void setCustomMapRaining(boolean v) { this.customMapRaining = v; this.sync(); }
+
+    public boolean isCustomMapThundering() { return customMapThundering; }
+    public void setCustomMapThundering(boolean v) { this.customMapThundering = v; this.sync(); }
+
+    public String getCustomMapUniqueKeys() { return customMapUniqueKeys; }
+    public void setCustomMapUniqueKeys(String v) { this.customMapUniqueKeys = v; this.sync(); }
+
+    public String getCustomMapGuaranteedKeys() { return customMapGuaranteedKeys; }
+    public void setCustomMapGuaranteedKeys(String v) { this.customMapGuaranteedKeys = v; this.sync(); }
+
+    public int getCustomMapNumRoomKeys() { return customMapNumRoomKeys; }
+    public void setCustomMapNumRoomKeys(int v) { this.customMapNumRoomKeys = v; this.sync(); }
+
+    public String getCustomMapRoomKeyString() { return customMapRoomKeyString; }
+    public void setCustomMapRoomKeyString(String v) { this.customMapRoomKeyString = v; this.sync(); }
+
     @Override
     public void readFromNbt(@NotNull NbtCompound tag, RegistryWrapper.@NotNull WrapperLookup registryLookup) {
         this.spawnPos = getPosWithOrientationFromNbt(tag, "spawnPos");
@@ -121,6 +159,15 @@ public class MapVariablesWorldComponent implements AutoSyncedComponent {
         if (tag.contains("hornBlockMapEffectId")) {
             this.hornBlockMapEffectId = tag.getString("hornBlockMapEffectId");
         }
+        if (tag.contains("customMapHasTimeOfDay")) this.customMapHasTimeOfDay = tag.getBoolean("customMapHasTimeOfDay");
+        if (tag.contains("customMapTimeOfDay")) this.customMapTimeOfDay = tag.getInt("customMapTimeOfDay");
+        if (tag.contains("customMapHasWeather")) this.customMapHasWeather = tag.getBoolean("customMapHasWeather");
+        if (tag.contains("customMapRaining")) this.customMapRaining = tag.getBoolean("customMapRaining");
+        if (tag.contains("customMapThundering")) this.customMapThundering = tag.getBoolean("customMapThundering");
+        if (tag.contains("customMapUniqueKeys")) this.customMapUniqueKeys = tag.getString("customMapUniqueKeys");
+        if (tag.contains("customMapGuaranteedKeys")) this.customMapGuaranteedKeys = tag.getString("customMapGuaranteedKeys");
+        if (tag.contains("customMapNumRoomKeys")) this.customMapNumRoomKeys = tag.getInt("customMapNumRoomKeys");
+        if (tag.contains("customMapRoomKeyString")) this.customMapRoomKeyString = tag.getString("customMapRoomKeyString");
     }
 
     @Override
@@ -133,6 +180,15 @@ public class MapVariablesWorldComponent implements AutoSyncedComponent {
         writeBoxToNbt(tag, this.resetTemplateArea, "resetTemplateArea");
         writeVec3iToNbt(tag, this.resetPasteOffset, "resetPasteOffset");
         tag.putString("hornBlockMapEffectId", this.hornBlockMapEffectId);
+        tag.putBoolean("customMapHasTimeOfDay", this.customMapHasTimeOfDay);
+        tag.putInt("customMapTimeOfDay", this.customMapTimeOfDay);
+        tag.putBoolean("customMapHasWeather", this.customMapHasWeather);
+        tag.putBoolean("customMapRaining", this.customMapRaining);
+        tag.putBoolean("customMapThundering", this.customMapThundering);
+        tag.putString("customMapUniqueKeys", this.customMapUniqueKeys);
+        tag.putString("customMapGuaranteedKeys", this.customMapGuaranteedKeys);
+        tag.putInt("customMapNumRoomKeys", this.customMapNumRoomKeys);
+        tag.putString("customMapRoomKeyString", this.customMapRoomKeyString);
     }
 
     public static class PosWithOrientation {

@@ -1,9 +1,6 @@
 package dev.doctor4t.wathe;
 
-import dev.doctor4t.ratatouille.client.util.OptionLocker;
-import dev.doctor4t.wathe.client.WatheClient;
 import eu.midnightdust.lib.config.MidnightConfig;
-import net.minecraft.client.MinecraftClient;
 
 public class WatheConfig extends MidnightConfig {
     @Entry
@@ -92,37 +89,9 @@ public class WatheConfig extends MidnightConfig {
     @Server
     @Entry(category = "GameConstants", min = 0)
     public static int gunRange = 65;
-    @Server
-    @Entry(category = "CustomMap")
-    public static boolean customMapHasTimeOfDay = false;
-    @Server
-    @Entry(category = "CustomMap")
-    public static int customMapTimeOfDay = 18000;
-    @Server
-    @Entry(category = "CustomMap")
-    public static boolean customMapHasWeather = false;
-    @Server
-    @Entry(category = "CustomMap")
-    public static boolean customMapRaining = false;
-    @Server
-    @Entry(category = "CustomMap")
-    public static boolean customMapThundering = false;
-    @Server
-    @Entry(category = "CustomMap")
-    public static String customMapUniqueKeys = "";
-    @Server
-    @Entry(category = "CustomMap")
-    public static String customMapGuaranteedKeys = "";
-    @Server
-    @Entry(category = "CustomMap", min = 0)
-    public static int customMapNumRoomKeys = 7;
-    @Server
-    @Entry(category = "CustomMap")
-    public static String customMapRoomKeyString = "Room %d";
 
     @Override
     public void writeChanges(String modid) {
         super.writeChanges(modid);
-
     }
 }
