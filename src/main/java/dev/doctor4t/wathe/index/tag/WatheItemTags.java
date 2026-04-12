@@ -9,6 +9,7 @@ public interface WatheItemTags {
 
     TagKey<Item> GUNS = create("guns");
     TagKey<Item> PSYCHOSIS_ITEMS = create("psychosis_items");
+    TagKey<Item> KEYS = create("keys");
 
     private static TagKey<Item> create(String id) {
         return TagKey.of(RegistryKeys.ITEM, Wathe.id(id));

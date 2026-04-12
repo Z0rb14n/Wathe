@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.item.Items;
 import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.util.Identifier;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -20,6 +21,9 @@ public class WatheItemTagGen extends FabricTagProvider.ItemTagProvider {
         this.getOrCreateTagBuilder(WatheItemTags.GUNS)
                 .add(WatheItems.REVOLVER)
                 .add(WatheItems.DERRINGER);
+
+        this.getOrCreateTagBuilder(WatheItemTags.KEYS)
+                .addOptional(Identifier.of("noellesroles", "master_key"));
 
         this.getOrCreateTagBuilder(WatheItemTags.PSYCHOSIS_ITEMS)
                 .add(Items.AIR)

@@ -26,8 +26,15 @@ public abstract class ItemEntityMixin {
     public abstract ItemStack getStack();
 
     @WrapMethod(method = "onPlayerCollision")
-    public void wathe$preventGunPickup(PlayerEntity player, Operation<Void> original) {
-        if (player.isCreative() || !this.getStack().isIn(WatheItemTags.GUNS) || (GameWorldComponent.KEY.get(player.getWorld()).isInnocent(player) && !player.equals(this.getOwner()) && !player.getInventory().contains(itemStack -> itemStack.isIn(WatheItemTags.GUNS)))) {
+    public void wathe$preventPickup(PlayerEntity player, Operation<Void> original) {
+        if (player.isCreative()) {
+            original.call(player);
+            return;
+        }
+        if (this.getStack().isIn(WatheItemTags.KEYS) && player.getInventory().contains(itemStack -> itemStack.isIn(WatheItemTags.KEYS))) {
+            return;
+        }
+        if (!this.getStack().isIn(WatheItemTags.GUNS) || (GameWorldComponent.KEY.get(player.getWorld()).isInnocent(player) && !player.equals(this.getOwner()) && !player.getInventory().contains(itemStack -> itemStack.isIn(WatheItemTags.GUNS)))) {
             original.call(player);
         }
     }
