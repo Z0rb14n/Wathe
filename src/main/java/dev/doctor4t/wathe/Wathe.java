@@ -15,6 +15,7 @@ import net.minecraft.world.TeleportTarget;
 import dev.doctor4t.wathe.game.GameConstants;
 import dev.doctor4t.wathe.index.*;
 import dev.doctor4t.wathe.util.*;
+import dev.doctor4t.wathe.world.WatheMapWorlds;
 import dev.upcraft.datasync.api.DataSyncAPI;
 import dev.upcraft.datasync.api.util.Entitlements;
 import net.fabricmc.api.ModInitializer;
@@ -33,6 +34,8 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.TeleportTarget;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -121,6 +124,9 @@ public class Wathe implements ModInitializer {
                             String.format("%.1f", player.getX()), String.format("%.1f", player.getY()), String.format("%.1f", player.getZ()));
                 }
             }, 3);
+            if (ServerPlayNetworking.canSend(player, ConfigSyncPayload.ID)) {
+                ServerPlayNetworking.send(player, ConfigSyncPayload.fromConfig());
+            }
             DataSyncAPI.refreshAllPlayerData(player.getUuid()).thenRunAsync(() -> {
                 // check if player is supporter now, if not kick
                 if (GameWorldComponent.KEY.get(player.getWorld()).isLockedToSupporters() && !Wathe.isSupporter(player)) {
@@ -129,6 +135,7 @@ public class Wathe implements ModInitializer {
             }, player.getWorld().getServer());
         });
 
+        PayloadTypeRegistry.playS2C().register(ConfigSyncPayload.ID, ConfigSyncPayload.CODEC);
         PayloadTypeRegistry.playS2C().register(ShootMuzzleS2CPayload.ID, ShootMuzzleS2CPayload.CODEC);
         PayloadTypeRegistry.playS2C().register(PoisonUtils.PoisonOverlayPayload.ID, PoisonUtils.PoisonOverlayPayload.CODEC);
         PayloadTypeRegistry.playS2C().register(GunDropPayload.ID, GunDropPayload.CODEC);

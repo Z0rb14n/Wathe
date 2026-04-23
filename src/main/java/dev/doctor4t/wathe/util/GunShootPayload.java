@@ -10,7 +10,6 @@ import dev.doctor4t.wathe.index.WatheDataComponentTypes;
 import dev.doctor4t.wathe.index.WatheItems;
 import dev.doctor4t.wathe.index.WatheSounds;
 import dev.doctor4t.wathe.index.tag.WatheItemTags;
-import dev.doctor4t.wathe.item.RevolverItem;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.Entity;
@@ -42,6 +41,8 @@ public record GunShootPayload(int target) implements CustomPayload {
     }
 
     public static class Receiver implements ServerPlayNetworking.PlayPayloadHandler<GunShootPayload> {
+        private static final float UNPATCHED_CLIENT_GUN_RANGE = 15f;
+
         @Override
         public void receive(@NotNull GunShootPayload payload, ServerPlayNetworking.@NotNull Context context) {
             ServerPlayerEntity player = context.player();
@@ -66,8 +67,9 @@ public record GunShootPayload(int target) implements CustomPayload {
             }
 
             Entity entity = player.getServerWorld().getEntityById(payload.target());
+            boolean entityFromCollision = false;
 
-            if (payload.target() == -1 && WatheConfig.gunRange > RevolverItem.CLIENT_GUN_RANGE) {
+            if (payload.target() == -1 && WatheConfig.gunRange > UNPATCHED_CLIENT_GUN_RANGE) {
                 // fix noelle's roles fake gun being actually working
                 if (!Registries.ITEM.getId(mainHandStack.getItem()).getPath().contains("fake_revolver")) {
                     // hacky server side logic
@@ -75,11 +77,12 @@ public record GunShootPayload(int target) implements CustomPayload {
                     HitResult hitResult = ProjectileUtil.getCollision(player, new PlayerPredicate(), WatheConfig.gunRange);
                     if (hitResult instanceof EntityHitResult entityHitResult) {
                         entity = entityHitResult.getEntity();
+                        entityFromCollision = true;
                     }
                 }
             }
 
-            if (entity instanceof PlayerEntity target && target.distanceTo(player) < WatheConfig.gunRange) {
+            if (entity instanceof PlayerEntity target && (entityFromCollision || RangeChecks.isWithinRange(player, target, WatheConfig.gunRange))) {
                 GameWorldComponent game = GameWorldComponent.KEY.get(player.getWorld());
                 Item revolver = WatheItems.REVOLVER;
 
