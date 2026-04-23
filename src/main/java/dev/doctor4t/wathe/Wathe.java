@@ -23,6 +23,7 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.command.argument.serialize.ConstantArgumentSerializer;
@@ -98,6 +99,11 @@ public class Wathe implements ModInitializer {
                 newPlayer.teleportTo(new TeleportTarget(target, spawn.pos, Vec3d.ZERO, spawn.yaw, spawn.pitch, TeleportTarget.NO_OP));
             });
         });
+
+        // Detect dark inner skin layer on join, clear flag on disconnect
+        ServerPlayerEvents.JOIN.register(SkinEnforcer::analyzeOnJoin);
+        ServerPlayConnectionEvents.DISCONNECT.register((handler, server) ->
+            SkinEnforcer.clear(handler.player.getUuid()));
 
         // server lock to supporters; also redirect players from hub to current map
         ServerPlayerEvents.JOIN.register(player -> {

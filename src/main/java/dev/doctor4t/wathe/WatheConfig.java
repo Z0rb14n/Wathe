@@ -5,6 +5,8 @@ import eu.midnightdust.lib.config.MidnightConfig;
 public class WatheConfig extends MidnightConfig {
     @Entry
     public static boolean ultraPerfMode = false;
+    @Entry(category = "AntiCheat", min = 0, max = 255)
+    public static int darkThreshold = 30;
     @Entry
     public static boolean disableScreenShake = false;
 

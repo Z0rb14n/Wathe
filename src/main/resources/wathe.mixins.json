@@ -5,6 +5,7 @@
   "plugin": "dev.doctor4t.wathe.mixin.TmmMixinPlugin",
   "server": [
     "MinecraftServerAccessor",
+    "PlayerInfoUpdateS2CPacketMixin",
     "PlayerManagerMixin"
   ],
   "mixins": [
