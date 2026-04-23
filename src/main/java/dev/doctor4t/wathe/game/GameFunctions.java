@@ -117,6 +117,9 @@ public class GameFunctions {
         baseInitialize(serverWorld, gameComponent, readyPlayerList);
         gameComponent.getGameMode().initializeGame(serverWorld, gameComponent, readyPlayerList);
 
+        // Roles are assigned by this point — snapshot them for stats tracking.
+        dev.doctor4t.wathe.stats.WatheStats.startRound(serverWorld, readyPlayerList);
+
         gameComponent.sync();
 
         GameEvents.ON_FINISH_INITIALIZE.invoker().onFinishInitialize(serverWorld, gameComponent);
@@ -222,6 +225,8 @@ public class GameFunctions {
         gameComponent.clearRoleMap();
         gameComponent.setGameStatus(GameWorldComponent.GameStatus.INACTIVE);
         trainComponent.setTime(0);
+        // Drop any tracked round that never reached setRoundEndData (e.g. /stop before a winner).
+        dev.doctor4t.wathe.stats.WatheStats.discardRound(world);
         gameComponent.sync();
 
         GameEvents.ON_FINISH_FINALIZE.invoker().onFinishFinalize(world, gameComponent);
@@ -274,6 +279,8 @@ public class GameFunctions {
         } else {
             return;
         }
+
+        dev.doctor4t.wathe.stats.WatheStats.recordKill(victim, killer, deathReason);
 
         if (killer != null) {
             if (GameWorldComponent.KEY.get(killer.getWorld()).canUseKillerFeatures(killer)) {
