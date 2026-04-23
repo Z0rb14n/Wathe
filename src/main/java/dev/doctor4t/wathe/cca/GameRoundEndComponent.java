@@ -49,6 +49,9 @@ public class GameRoundEndComponent implements AutoSyncedComponent {
             this.players.add(new RoundEndData(player.getGameProfile(), role, !GameFunctions.isPlayerAliveAndSurvival(player)));
         }
         this.winStatus = winStatus;
+        if (this.world instanceof net.minecraft.server.world.ServerWorld serverWorld) {
+            dev.doctor4t.wathe.stats.WatheStats.endRound(serverWorld, winStatus);
+        }
         this.sync();
     }
 

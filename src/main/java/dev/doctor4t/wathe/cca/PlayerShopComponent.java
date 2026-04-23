@@ -41,6 +41,7 @@ public class PlayerShopComponent implements AutoSyncedComponent, ServerTickingCo
     }
 
     public void addToBalance(int amount) {
+        if (amount > 0) dev.doctor4t.wathe.stats.WatheStats.recordEarned(this.player, amount);
         this.setBalance(this.balance + amount);
     }
 
@@ -56,6 +57,7 @@ public class PlayerShopComponent implements AutoSyncedComponent, ServerTickingCo
             this.balance = entry.price() * 10;
         if (this.balance >= entry.price() && !this.player.getItemCooldownManager().isCoolingDown(entry.stack().getItem()) && entry.onBuy(this.player)) {
             this.balance -= entry.price();
+            dev.doctor4t.wathe.stats.WatheStats.recordPurchase(this.player, Registries.ITEM.getId(entry.stack().getItem()), entry.price());
             if (this.player instanceof ServerPlayerEntity player) {
                 player.networkHandler.sendPacket(new PlaySoundS2CPacket(Registries.SOUND_EVENT.getEntry(WatheSounds.UI_SHOP_BUY), SoundCategory.PLAYERS, player.getX(), player.getY(), player.getZ(), 1.0f, 0.9f + this.player.getRandom().nextFloat() * 0.2f, player.getRandom().nextLong()));
             }
