@@ -28,11 +28,13 @@ public record KnifeStabPayload(int target) implements CustomPayload {
     }
 
     public static class Receiver implements ServerPlayNetworking.PlayPayloadHandler<KnifeStabPayload> {
+        private static final float KNIFE_RANGE = 3.0f;
+
         @Override
         public void receive(@NotNull KnifeStabPayload payload, ServerPlayNetworking.@NotNull Context context) {
             ServerPlayerEntity player = context.player();
             if (!(player.getServerWorld().getEntityById(payload.target()) instanceof PlayerEntity target)) return;
-            if (target.distanceTo(player) > 3.0) return;
+            if (!RangeChecks.isWithinRange(player, target, KNIFE_RANGE)) return;
             GameFunctions.killPlayer(target, true, player, GameConstants.DeathReasons.KNIFE);
             target.playSound(WatheSounds.ITEM_KNIFE_STAB, 1.0f, 1.0f);
             player.swingHand(Hand.MAIN_HAND);

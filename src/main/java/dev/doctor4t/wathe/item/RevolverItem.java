@@ -1,6 +1,7 @@
 package dev.doctor4t.wathe.item;
 
 import dev.doctor4t.wathe.Wathe;
+import dev.doctor4t.wathe.WatheConfig;
 import dev.doctor4t.wathe.client.WatheClient;
 import dev.doctor4t.wathe.client.particle.HandParticle;
 import dev.doctor4t.wathe.client.render.WatheRenderLayers;
@@ -20,8 +21,8 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
 public class RevolverItem extends Item {
-    // clients aren't necessarily updated, use old gun range and just do logic on the server side lol
-    public static final float CLIENT_GUN_RANGE = 15f;
+    public static float clientGunRange = WatheConfig.gunRange;
+
     public RevolverItem(Settings settings) {
         super(settings);
     }
@@ -43,19 +44,11 @@ public class RevolverItem extends Item {
     }
 
     public static void spawnHandParticle() {
-        HandParticle handParticle = new HandParticle()
-                .setTexture(Wathe.id("textures/particle/gunshot.png"))
-                .setPos(0.1f, 0.275f, -0.2f)
-                .setMaxAge(3)
-                .setSize(0.5f)
-                .setVelocity(0f, 0f, 0f)
-                .setLight(15, 15)
-                .setAlpha(1f, 0.1f)
-                .setRenderLayer(WatheRenderLayers::additive);
+        HandParticle handParticle = new HandParticle().setTexture(Wathe.id("textures/particle/gunshot.png")).setPos(0.1f, 0.275f, -0.2f).setMaxAge(3).setSize(0.5f).setVelocity(0f, 0f, 0f).setLight(15, 15).setAlpha(1f, 0.1f).setRenderLayer(WatheRenderLayers::additive);
         WatheClient.handParticleManager.spawn(handParticle);
     }
 
     public static HitResult getGunTarget(PlayerEntity user) {
-        return ProjectileUtil.getCollision(user, entity -> entity instanceof PlayerEntity player && GameFunctions.isPlayerAliveAndSurvival(player), CLIENT_GUN_RANGE);
+        return ProjectileUtil.getCollision(user, entity -> entity instanceof PlayerEntity player && GameFunctions.isPlayerAliveAndSurvival(player), clientGunRange);
     }
 }

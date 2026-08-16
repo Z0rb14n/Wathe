@@ -104,98 +104,24 @@ public class WatheClient implements ClientModInitializer {
         ModelLoadingPlugin.register(new KnifeModelLoadingPlugin());
 
         // Block render layers
-        BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(),
-                WatheBlocks.STAINLESS_STEEL_VENT_HATCH,
-                WatheBlocks.DARK_STEEL_VENT_HATCH,
-                WatheBlocks.TARNISHED_GOLD_VENT_HATCH,
-                WatheBlocks.METAL_SHEET_WALKWAY,
-                WatheBlocks.STAINLESS_STEEL_LADDER,
-                WatheBlocks.COCKPIT_DOOR,
-                WatheBlocks.METAL_SHEET_DOOR,
-                WatheBlocks.GOLDEN_GLASS_PANEL,
-                WatheBlocks.CULLING_GLASS,
-                WatheBlocks.STAINLESS_STEEL_WALKWAY,
-                WatheBlocks.DARK_STEEL_WALKWAY,
-                WatheBlocks.PANEL_STRIPES,
-                WatheBlocks.RAIL_BEAM,
-                WatheBlocks.TRIMMED_RAILING_POST,
-                WatheBlocks.DIAGONAL_TRIMMED_RAILING,
-                WatheBlocks.TRIMMED_RAILING,
-                WatheBlocks.TRIMMED_EBONY_STAIRS,
-                WatheBlocks.WHITE_LOUNGE_COUCH,
-                WatheBlocks.WHITE_OTTOMAN,
-                WatheBlocks.WHITE_TRIMMED_BED,
-                WatheBlocks.BLUE_LOUNGE_COUCH,
-                WatheBlocks.GREEN_LOUNGE_COUCH,
-                WatheBlocks.BAR_STOOL,
-                WatheBlocks.WALL_LAMP,
-                WatheBlocks.SMALL_BUTTON,
-                WatheBlocks.ELEVATOR_BUTTON,
-                WatheBlocks.STAINLESS_STEEL_SPRINKLER,
-                WatheBlocks.GOLD_SPRINKLER,
-                WatheBlocks.GOLD_ORNAMENT,
-                WatheBlocks.WHEEL,
-                WatheBlocks.RUSTED_WHEEL,
-                WatheBlocks.BARRIER_PANEL,
-                WatheBlocks.FOOD_PLATTER,
-                WatheBlocks.DRINK_TRAY,
-                WatheBlocks.LIGHT_BARRIER,
-                WatheBlocks.HORN
-        );
-        BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getTranslucent(),
-                WatheBlocks.RHOMBUS_GLASS,
-                WatheBlocks.PRIVACY_GLASS_PANEL,
-                WatheBlocks.CULLING_BLACK_HULL,
-                WatheBlocks.CULLING_WHITE_HULL,
-                WatheBlocks.HULL_GLASS,
-                WatheBlocks.RHOMBUS_HULL_GLASS
-        );
+        BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(), WatheBlocks.STAINLESS_STEEL_VENT_HATCH, WatheBlocks.DARK_STEEL_VENT_HATCH, WatheBlocks.TARNISHED_GOLD_VENT_HATCH, WatheBlocks.METAL_SHEET_WALKWAY, WatheBlocks.STAINLESS_STEEL_LADDER, WatheBlocks.COCKPIT_DOOR, WatheBlocks.METAL_SHEET_DOOR, WatheBlocks.GOLDEN_GLASS_PANEL, WatheBlocks.CULLING_GLASS, WatheBlocks.STAINLESS_STEEL_WALKWAY, WatheBlocks.DARK_STEEL_WALKWAY, WatheBlocks.PANEL_STRIPES, WatheBlocks.RAIL_BEAM, WatheBlocks.TRIMMED_RAILING_POST, WatheBlocks.DIAGONAL_TRIMMED_RAILING, WatheBlocks.TRIMMED_RAILING, WatheBlocks.TRIMMED_EBONY_STAIRS, WatheBlocks.WHITE_LOUNGE_COUCH, WatheBlocks.WHITE_OTTOMAN, WatheBlocks.WHITE_TRIMMED_BED, WatheBlocks.BLUE_LOUNGE_COUCH, WatheBlocks.GREEN_LOUNGE_COUCH, WatheBlocks.BAR_STOOL, WatheBlocks.WALL_LAMP, WatheBlocks.SMALL_BUTTON, WatheBlocks.ELEVATOR_BUTTON, WatheBlocks.STAINLESS_STEEL_SPRINKLER, WatheBlocks.GOLD_SPRINKLER, WatheBlocks.GOLD_ORNAMENT, WatheBlocks.WHEEL, WatheBlocks.RUSTED_WHEEL, WatheBlocks.BARRIER_PANEL, WatheBlocks.FOOD_PLATTER, WatheBlocks.DRINK_TRAY, WatheBlocks.LIGHT_BARRIER, WatheBlocks.HORN);
+        BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getTranslucent(), WatheBlocks.RHOMBUS_GLASS, WatheBlocks.PRIVACY_GLASS_PANEL, WatheBlocks.CULLING_BLACK_HULL, WatheBlocks.CULLING_WHITE_HULL, WatheBlocks.HULL_GLASS, WatheBlocks.RHOMBUS_HULL_GLASS);
 
         // Custom block models
         CustomModelProvider customModelProvider = new CustomModelProvider();
         ModelLoadingPlugin.register(customModelProvider);
 
         // Block Entity Renderers
-        BlockEntityRendererFactories.register(
-                WatheBlockEntities.SMALL_GLASS_DOOR,
-                ctx -> new SmallDoorBlockEntityRenderer(Wathe.id("textures/entity/small_glass_door.png"), ctx)
-        );
-        BlockEntityRendererFactories.register(
-                WatheBlockEntities.SMALL_WOOD_DOOR,
-                ctx -> new SmallDoorBlockEntityRenderer(Wathe.id("textures/entity/small_wood_door.png"), ctx)
-        );
-        BlockEntityRendererFactories.register(
-                WatheBlockEntities.ANTHRACITE_STEEL_DOOR,
-                ctx -> new SmallDoorBlockEntityRenderer(Wathe.id("textures/entity/anthracite_steel_door.png"), ctx)
-        );
-        BlockEntityRendererFactories.register(
-                WatheBlockEntities.KHAKI_STEEL_DOOR,
-                ctx -> new SmallDoorBlockEntityRenderer(Wathe.id("textures/entity/khaki_steel_door.png"), ctx)
-        );
-        BlockEntityRendererFactories.register(
-                WatheBlockEntities.MAROON_STEEL_DOOR,
-                ctx -> new SmallDoorBlockEntityRenderer(Wathe.id("textures/entity/maroon_steel_door.png"), ctx)
-        );
-        BlockEntityRendererFactories.register(
-                WatheBlockEntities.MUNTZ_STEEL_DOOR,
-                ctx -> new SmallDoorBlockEntityRenderer(Wathe.id("textures/entity/muntz_steel_door.png"), ctx)
-        );
-        BlockEntityRendererFactories.register(
-                WatheBlockEntities.NAVY_STEEL_DOOR,
-                ctx -> new SmallDoorBlockEntityRenderer(Wathe.id("textures/entity/navy_steel_door.png"), ctx)
-        );
-        BlockEntityRendererFactories.register(
-                WatheBlockEntities.WHEEL,
-                ctx -> new WheelBlockEntityRenderer(Wathe.id("textures/entity/wheel.png"), ctx)
-        );
-        BlockEntityRendererFactories.register(
-                WatheBlockEntities.RUSTED_WHEEL,
-                ctx -> new WheelBlockEntityRenderer(Wathe.id("textures/entity/rusted_wheel.png"), ctx)
-        );
-        BlockEntityRendererFactories.register(
-                WatheBlockEntities.BEVERAGE_PLATE,
-                PlateBlockEntityRenderer::new
-        );
+        BlockEntityRendererFactories.register(WatheBlockEntities.SMALL_GLASS_DOOR, ctx -> new SmallDoorBlockEntityRenderer(Wathe.id("textures/entity/small_glass_door.png"), ctx));
+        BlockEntityRendererFactories.register(WatheBlockEntities.SMALL_WOOD_DOOR, ctx -> new SmallDoorBlockEntityRenderer(Wathe.id("textures/entity/small_wood_door.png"), ctx));
+        BlockEntityRendererFactories.register(WatheBlockEntities.ANTHRACITE_STEEL_DOOR, ctx -> new SmallDoorBlockEntityRenderer(Wathe.id("textures/entity/anthracite_steel_door.png"), ctx));
+        BlockEntityRendererFactories.register(WatheBlockEntities.KHAKI_STEEL_DOOR, ctx -> new SmallDoorBlockEntityRenderer(Wathe.id("textures/entity/khaki_steel_door.png"), ctx));
+        BlockEntityRendererFactories.register(WatheBlockEntities.MAROON_STEEL_DOOR, ctx -> new SmallDoorBlockEntityRenderer(Wathe.id("textures/entity/maroon_steel_door.png"), ctx));
+        BlockEntityRendererFactories.register(WatheBlockEntities.MUNTZ_STEEL_DOOR, ctx -> new SmallDoorBlockEntityRenderer(Wathe.id("textures/entity/muntz_steel_door.png"), ctx));
+        BlockEntityRendererFactories.register(WatheBlockEntities.NAVY_STEEL_DOOR, ctx -> new SmallDoorBlockEntityRenderer(Wathe.id("textures/entity/navy_steel_door.png"), ctx));
+        BlockEntityRendererFactories.register(WatheBlockEntities.WHEEL, ctx -> new WheelBlockEntityRenderer(Wathe.id("textures/entity/wheel.png"), ctx));
+        BlockEntityRendererFactories.register(WatheBlockEntities.RUSTED_WHEEL, ctx -> new WheelBlockEntityRenderer(Wathe.id("textures/entity/rusted_wheel.png"), ctx));
+        BlockEntityRendererFactories.register(WatheBlockEntities.BEVERAGE_PLATE, PlateBlockEntityRenderer::new);
         BlockEntityRendererFactories.register(WatheBlockEntities.HORN, HornBlockEntityRenderer::new);
 
         // Ambience
@@ -274,6 +200,7 @@ public class WatheClient implements ClientModInitializer {
             RoundTextRenderer.tick();
         });
 
+        ClientPlayNetworking.registerGlobalReceiver(ConfigSyncPayload.ID, new ConfigSyncPayload.Receiver());
         ClientPlayNetworking.registerGlobalReceiver(ShootMuzzleS2CPayload.ID, new ShootMuzzleS2CPayload.Receiver());
         ClientPlayNetworking.registerGlobalReceiver(PoisonUtils.PoisonOverlayPayload.ID, new PoisonUtils.PoisonOverlayPayload.Receiver());
         ClientPlayNetworking.registerGlobalReceiver(GunDropPayload.ID, new GunDropPayload.Receiver());
@@ -282,12 +209,7 @@ public class WatheClient implements ClientModInitializer {
         ClientPlayNetworking.registerGlobalReceiver(TaskCompletePayload.ID, new TaskCompletePayload.Receiver());
 
         // Instinct keybind
-        instinctKeybind = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                "key." + Wathe.MOD_ID + ".instinct",
-                InputUtil.Type.KEYSYM,
-                GLFW.GLFW_KEY_LEFT_ALT,
-                "category." + Wathe.MOD_ID + ".keybinds"
-        ));
+        instinctKeybind = KeyBindingHelper.registerKeyBinding(new KeyBinding("key." + Wathe.MOD_ID + ".instinct", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_LEFT_ALT, "category." + Wathe.MOD_ID + ".keybinds"));
     }
 
     public static TrainWorldComponent getTrainComponent() {
