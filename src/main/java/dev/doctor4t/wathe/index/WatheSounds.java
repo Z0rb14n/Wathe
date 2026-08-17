@@ -20,6 +20,9 @@ public interface WatheSounds {
     SoundEvent BLOCK_DOOR_TOGGLE = registrar.create("block.door.toggle");
     SoundEvent BLOCK_SPRINKLER_RUN = registrar.create("block.sprinkler.run");
     SoundEvent BLOCK_DOOR_LOCKED = registrar.create("block.door.locked");
+    SoundEvent BLOCK_VENT_HATCH_LOCKED = registrar.create("block.vent_hatch.locked");
+    SoundEvent BLOCK_VENT_HATCH_OPEN = registrar.create("block.vent_hatch.open");
+    SoundEvent BLOCK_VENT_HATCH_CLOSE = registrar.create("block.vent_hatch.close");
 
     // Items
     SoundEvent ITEM_KEY_DOOR = registrar.create("item.key.door");
