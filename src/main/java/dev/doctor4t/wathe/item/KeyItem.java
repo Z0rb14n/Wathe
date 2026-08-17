@@ -1,7 +1,9 @@
 package dev.doctor4t.wathe.item;
 
 import dev.doctor4t.wathe.block.SmallDoorBlock;
+import dev.doctor4t.wathe.block.VentHatchBlock;
 import dev.doctor4t.wathe.block_entity.SmallDoorBlockEntity;
+import dev.doctor4t.wathe.block_entity.VentHatchBlockEntity;
 import dev.doctor4t.wathe.util.AdventureUsable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.enums.DoubleBlockHalf;
@@ -29,6 +31,26 @@ public class KeyItem extends Item implements AdventureUsable {
         World world = context.getWorld();
         BlockPos pos = context.getBlockPos();
         BlockState state = world.getBlockState(pos);
+
+        if (state.getBlock() instanceof VentHatchBlock) {
+            if (world.getBlockEntity(pos) instanceof VentHatchBlockEntity entity && player != null) {
+                LoreComponent loreComponent = context.getStack().get(DataComponentTypes.LORE);
+                if (loreComponent != null) {
+                    List<Text> lines = loreComponent.lines();
+                    if (lines == null || lines.isEmpty()) {
+                        return ActionResult.PASS;
+                    }
+
+                    if (player.isCreative() && player.isSneaking()) {
+                        entity.setKeyName(lines.getFirst().getString());
+                        entity.sync();
+                        return ActionResult.SUCCESS;
+                    }
+                }
+            }
+
+            return ActionResult.PASS;
+        }
 
         if (state.getBlock() instanceof SmallDoorBlock) {
             BlockPos lowerPos = state.get(SmallDoorBlock.HALF) == DoubleBlockHalf.LOWER ? pos : pos.down();
