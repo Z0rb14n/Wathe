@@ -94,6 +94,11 @@ public record GunShootPayload(int target) implements CustomPayload {
                         backfire = true;
                         GameFunctions.killPlayer(player, true, player, GameConstants.DeathReasons.GUN);
                     } else {
+                        // layout predicates: keep the drop task as the 3rd lambda in receive()
+                        // lambda$receive$2(ServerPlayNetworking.Context, ServerPlayerEntity, Item)
+                        // which kinswathe's NoBackfire mixins hook and cancel for non-killer roles
+                        context.player().getInventory().contains((s) -> s.isIn(WatheItemTags.GUNS));
+                        context.player().getInventory().contains((s) -> s.isOf(revolver));
                         Scheduler.schedule(() -> {
                             if (!context.player().getInventory().contains((s) -> s.isIn(WatheItemTags.GUNS))) return;
                             player.getInventory().remove((s) -> s.isOf(revolver), 1, player.getInventory());
