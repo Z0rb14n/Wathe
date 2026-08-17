@@ -38,10 +38,10 @@ public abstract class DefaultChunkRendererMixin {
     private static GlMutableBuffer glBuffer;
 
     @ModifyExpressionValue(
-            method = "render",
+            method = "render(Lnet/caffeinemc/mods/sodium/client/render/chunk/ChunkRenderMatrices;Lnet/caffeinemc/mods/sodium/client/gl/device/CommandList;Lnet/caffeinemc/mods/sodium/client/render/chunk/lists/ChunkRenderListIterable;Lnet/caffeinemc/mods/sodium/client/render/chunk/terrain/TerrainRenderPass;Lnet/caffeinemc/mods/sodium/client/render/viewport/CameraTransform;Z)V",
             at = @At(
                     value = "FIELD",
-                    target = "Lnet/caffeinemc/mods/sodium/client/gui/SodiumGameOptions$PerformanceSettings;useBlockFaceCulling:Z"
+                    target = "Lnet/caffeinemc/mods/sodium/client/gui/SodiumOptions$PerformanceSettings;useBlockFaceCulling:Z"
             ),
             remap = false
     )
@@ -52,7 +52,7 @@ public abstract class DefaultChunkRendererMixin {
         return original;
     }
 
-    @Inject(method = "render", at = @At(value = "INVOKE",
+    @Inject(method = "render(Lnet/caffeinemc/mods/sodium/client/render/chunk/ChunkRenderMatrices;Lnet/caffeinemc/mods/sodium/client/gl/device/CommandList;Lnet/caffeinemc/mods/sodium/client/render/chunk/lists/ChunkRenderListIterable;Lnet/caffeinemc/mods/sodium/client/render/chunk/terrain/TerrainRenderPass;Lnet/caffeinemc/mods/sodium/client/render/viewport/CameraTransform;Z)V", at = @At(value = "INVOKE",
             target = "Lnet/caffeinemc/mods/sodium/client/render/chunk/DefaultChunkRenderer;executeDrawBatch(Lnet/caffeinemc/mods/sodium/client/gl/device/CommandList;Lnet/caffeinemc/mods/sodium/client/gl/tessellation/GlTessellation;Lnet/caffeinemc/mods/sodium/client/gl/device/MultiDrawBatch;)V"),
             remap = false)
     private void modifyChunkRenderBefore(ChunkRenderMatrices matrices,
@@ -60,16 +60,21 @@ public abstract class DefaultChunkRendererMixin {
                                          ChunkRenderListIterable renderLists,
                                          TerrainRenderPass renderPass,
                                          CameraTransform camera,
+                                         boolean useTranslucentSorting,
                                          CallbackInfo ci,
                                          @Local(ordinal = 0) ChunkShaderInterface shader,
                                          @Local(ordinal = 0) RenderRegion region) {
+        if (wathe_buffer == null) {
+            wathe_buffer = MemoryUtil.memAlloc(RenderRegion.REGION_SIZE * 16);
+        }
+
         glBuffer = commandList.createMutableBuffer();
         commandList.uploadData(glBuffer, wathe_buffer, GlBufferUsage.STREAM_DRAW);
 
         ((SodiumShaderInterface) shader).wathe$set(glBuffer);
     }
 
-    @Inject(method = "render", at = @At(value = "INVOKE",
+    @Inject(method = "render(Lnet/caffeinemc/mods/sodium/client/render/chunk/ChunkRenderMatrices;Lnet/caffeinemc/mods/sodium/client/gl/device/CommandList;Lnet/caffeinemc/mods/sodium/client/render/chunk/lists/ChunkRenderListIterable;Lnet/caffeinemc/mods/sodium/client/render/chunk/terrain/TerrainRenderPass;Lnet/caffeinemc/mods/sodium/client/render/viewport/CameraTransform;Z)V", at = @At(value = "INVOKE",
             target = "Lnet/caffeinemc/mods/sodium/client/render/chunk/DefaultChunkRenderer;executeDrawBatch(Lnet/caffeinemc/mods/sodium/client/gl/device/CommandList;Lnet/caffeinemc/mods/sodium/client/gl/tessellation/GlTessellation;Lnet/caffeinemc/mods/sodium/client/gl/device/MultiDrawBatch;)V",
             shift = At.Shift.AFTER),
             remap = false)
@@ -78,13 +83,13 @@ public abstract class DefaultChunkRendererMixin {
                                         ChunkRenderListIterable renderLists,
                                         TerrainRenderPass renderPass,
                                         CameraTransform camera,
-                                        CallbackInfo ci) {
-        MemoryUtil.memFree(wathe_buffer);
+                                         boolean useTranslucentSorting,
+                                         CallbackInfo ci) {
         commandList.deleteBuffer(glBuffer);
-        wathe_buffer = null;
+        glBuffer = null;
     }
 
-    @Inject(method = "fillCommandBuffer",
+    @Inject(method = "fillCommandBuffer(Lnet/caffeinemc/mods/sodium/client/gl/device/MultiDrawBatch;Lnet/caffeinemc/mods/sodium/client/render/chunk/region/RenderRegion;Lnet/caffeinemc/mods/sodium/client/render/chunk/data/SectionRenderDataStorage;Lnet/caffeinemc/mods/sodium/client/render/chunk/lists/ChunkRenderList;Lnet/caffeinemc/mods/sodium/client/render/viewport/CameraTransform;Lnet/caffeinemc/mods/sodium/client/render/chunk/terrain/TerrainRenderPass;ZZ)V",
             at = @At(value = "INVOKE",
                     target = "Lnet/caffeinemc/mods/sodium/client/render/chunk/data/SectionRenderDataUnsafe;getSliceMask(J)I"),
             remap = false)
@@ -96,6 +101,7 @@ public abstract class DefaultChunkRendererMixin {
             CameraTransform camera,
             TerrainRenderPass pass,
             boolean useBlockFaceCulling,
+            boolean useTranslucentSorting,
             CallbackInfo ci,
             @Local(name = "sectionIndex") int sectionIndex
     ) {

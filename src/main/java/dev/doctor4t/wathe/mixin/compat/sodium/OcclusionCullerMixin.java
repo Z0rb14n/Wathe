@@ -15,16 +15,15 @@ public class OcclusionCullerMixin {
             method = "isWithinFrustum",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/caffeinemc/mods/sodium/client/render/viewport/Viewport;isBoxVisible(IIIFFF)Z"
+                    target = "Lnet/caffeinemc/mods/sodium/client/render/viewport/Viewport;isBoxVisible(III)Z"
             ),
             remap = false
     )
     private static boolean wrapIsBoxVisible(
             Viewport viewport,
             int cx, int cy, int cz,
-            float sx, float sy, float sz,
             Operation<Boolean> original
     ) {
-        return original.call(viewport, cx, cy, cz, sx, sy, sz) || WatheClient.isTrainMoving();
+        return original.call(viewport, cx, cy, cz) || WatheClient.isTrainMoving();
     }
 }
