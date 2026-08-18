@@ -23,5 +23,13 @@ public class HotelMapEffect extends KeyProvidingMapEffect {
             ServerPlayerEntity player = players.get(i);
             givePlayerKey(key, player);
         }
+        serverWorld.setTimeOfDay(18000);
+        serverWorld.setWeather(0, 999999, true, true);
+    }
+
+    @Override
+    public void finalizeMapEffects(ServerWorld serverWorld, List<ServerPlayerEntity> players) {
+        serverWorld.setTimeOfDay(0);
+        serverWorld.resetWeather();
     }
 }

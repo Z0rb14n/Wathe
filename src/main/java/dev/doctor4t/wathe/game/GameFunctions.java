@@ -13,7 +13,7 @@ import dev.doctor4t.wathe.compat.TrainVoicePlugin;
 import dev.doctor4t.wathe.entity.FirecrackerEntity;
 import dev.doctor4t.wathe.entity.NoteEntity;
 import dev.doctor4t.wathe.entity.PlayerBodyEntity;
-import dev.doctor4t.wathe.game.mapeffect.CustomConfigMapEffect;
+import dev.doctor4t.wathe.game.mapeffect.HarpyExpressTrainMapEffect;
 import dev.doctor4t.wathe.world.WatheMapWorlds;
 import dev.doctor4t.wathe.index.WatheDataComponentTypes;
 import dev.doctor4t.wathe.index.WatheEntities;
@@ -196,9 +196,11 @@ public class GameFunctions {
 
     public static void finalizeGame(ServerWorld world) {
         GameWorldComponent gameComponent = GameWorldComponent.KEY.get(world);
-        if (gameComponent.getMapEffect() instanceof CustomConfigMapEffect customConfigMap) {
+        // only harpy express train map effects in the base have it defined
+        // ngl in case that breaks everything don't call finalize for those
+        if (!(gameComponent.getMapEffect() instanceof HarpyExpressTrainMapEffect)) {
             // why don't we call finalize??????
-            customConfigMap.finalizeMapEffects(world, world.getPlayers());
+            gameComponent.getMapEffect().finalizeMapEffects(world, world.getPlayers());
         }
         GameEvents.ON_GAME_STOP.invoker().onGameStop(gameComponent.getGameMode());
         gameComponent.getGameMode().finalizeGame(world, gameComponent);

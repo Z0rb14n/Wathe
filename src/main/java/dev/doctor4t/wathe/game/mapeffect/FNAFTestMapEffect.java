@@ -16,5 +16,13 @@ public class FNAFTestMapEffect extends KeyProvidingMapEffect {
         for (ServerPlayerEntity player : players) {
             givePlayerKey("Bathroom", player);
         }
+        serverWorld.setTimeOfDay(18000);
+        serverWorld.setWeather(999999, 0, false, false);
+    }
+
+    @Override
+    public void finalizeMapEffects(ServerWorld serverWorld, List<ServerPlayerEntity> players) {
+        serverWorld.setTimeOfDay(0);
+        serverWorld.resetWeather();
     }
 }
