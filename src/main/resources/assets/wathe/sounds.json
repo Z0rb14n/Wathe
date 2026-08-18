@@ -100,13 +100,19 @@
 	},
 	"block.vent_hatch.open": {
 		"sounds": [
-			"wathe:block/vent_open"
+			{
+				"name": "wathe:block/vent_open",
+				"volume": 0.5
+			}
 		],
 		"subtitle": "subtitles.block.vent_hatch.open"
 	},
 	"block.vent_hatch.close": {
 		"sounds": [
-			"wathe:block/vent_enter"
+			{
+				"name": "wathe:block/vent_enter",
+				"volume": 0.35
+			}
 		],
 		"subtitle": "subtitles.block.vent_hatch.close"
 	},
