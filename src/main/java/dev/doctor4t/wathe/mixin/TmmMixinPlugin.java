@@ -21,9 +21,16 @@ public class TmmMixinPlugin implements IMixinConfigPlugin {
 
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-        if (!FabricLoader.getInstance().isModLoaded("sodium")) {
-            return !mixinClassName.contains("dev.doctor4t.wathe.mixin.compat.sodium");
-        } else return !mixinClassName.equals("dev.doctor4t.wathe.mixin.client.scenery.SceneryWorldRendererMixin");
+        if (mixinClassName.contains("dev.doctor4t.wathe.mixin.compat.kinswathe.") && !FabricLoader.getInstance().isModLoaded("kinswathe")) {
+            return false;
+        }
+        if (mixinClassName.contains("dev.doctor4t.wathe.mixin.compat.sodium.") && !FabricLoader.getInstance().isModLoaded("sodium")) {
+            return false;
+        }
+        if (mixinClassName.equals("dev.doctor4t.wathe.mixin.client.scenery.SceneryWorldRendererMixin") && FabricLoader.getInstance().isModLoaded("sodium")) {
+            return false;
+        }
+        return true;
     }
 
     @Override

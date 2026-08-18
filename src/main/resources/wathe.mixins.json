@@ -22,7 +22,8 @@
     "PlayerInventoryMixin",
     "ScreenHandlerJesterGunMixin",
     "ServerPlayerEntityMixin",
-    "ServerPlayNetworkHandlerMixin"
+    "ServerPlayNetworkHandlerMixin",
+    "compat.kinswathe.WrenchItemMixin"
   ],
   "injectors": {
     "defaultRequire": 1
