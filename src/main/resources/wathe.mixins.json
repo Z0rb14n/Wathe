@@ -22,8 +22,7 @@
     "PlayerInventoryMixin",
     "ScreenHandlerJesterGunMixin",
     "ServerPlayerEntityMixin",
-    "ServerPlayNetworkHandlerMixin",
-    "client.LivingEntityRendererMixin"
+    "ServerPlayNetworkHandlerMixin"
   ],
   "injectors": {
     "defaultRequire": 1
@@ -32,6 +31,7 @@
     "client.AbstractClientPlayerEntityMixin",
     "client.EntityRendererDispatchMixin",
     "client.GameRendererMixin",
+    "client.LivingEntityRendererMixin",
     "client.MinecraftClientMixin",
     "client.PlayerEntityRendererMixin",
     "client.ResourceTextureMixin",
