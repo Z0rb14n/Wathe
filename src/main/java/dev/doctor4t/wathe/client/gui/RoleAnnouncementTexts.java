@@ -26,6 +26,9 @@ public class RoleAnnouncementTexts {
         if (role == null) return null;
         RoleAnnouncementTexts.RoleAnnouncementText found = BY_NAME.get(role.identifier().getPath());
         if (found == null) found = BY_NAME.get(role.identifier().toTranslationKey());
+        if (found == null) {
+            found = registerRoleAnnouncementText(new RoleAnnouncementText(role.identifier().toTranslationKey(), role.color()));
+        }
         return found;
     }
 

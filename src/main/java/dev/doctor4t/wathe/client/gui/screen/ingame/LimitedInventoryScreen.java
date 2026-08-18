@@ -3,6 +3,7 @@ package dev.doctor4t.wathe.client.gui.screen.ingame;
 import dev.doctor4t.wathe.Wathe;
 import dev.doctor4t.wathe.api.Role;
 import dev.doctor4t.wathe.cca.GameWorldComponent;
+import dev.doctor4t.wathe.client.gui.RoleAnnouncementTexts;
 import dev.doctor4t.wathe.client.gui.StoreRenderer;
 import dev.doctor4t.wathe.game.GameConstants;
 import dev.doctor4t.wathe.util.ShopEntry;
@@ -79,7 +80,9 @@ public class LimitedInventoryScreen extends LimitedHandledScreen<PlayerScreenHan
         if (roleRowY != null) {
             Role role = GameWorldComponent.KEY.get(this.player.getWorld()).getRole(this.player);
             if (role != null) {
-                drawLabel(context, Text.translatable("announcement.role." + role.identifier().toTranslationKey()).withColor(role.color()), roleRowY);
+                RoleAnnouncementTexts.RoleAnnouncementText text = RoleAnnouncementTexts.findByRole(role);
+                Text label = text != null ? text.roleText : Text.translatable("announcement.role." + role.identifier().toTranslationKey()).withColor(role.color());
+                drawLabel(context, label, roleRowY);
             }
         }
         Integer modifierRowY = findRowY(MODIFIER_ROW_OFFSET);
