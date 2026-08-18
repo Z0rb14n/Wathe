@@ -1,19 +1,32 @@
 package dev.doctor4t.wathe.client.gui;
 
+import dev.doctor4t.wathe.api.Role;
 import dev.doctor4t.wathe.game.GameFunctions;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 import java.util.function.Function;
 
 public class RoleAnnouncementTexts {
     public static final ArrayList<RoleAnnouncementTexts.RoleAnnouncementText> ROLE_ANNOUNCEMENT_TEXTS = new ArrayList<>();
+    private static final Map<String, RoleAnnouncementTexts.RoleAnnouncementText> BY_NAME = new HashMap<>();
 
     public static RoleAnnouncementTexts.RoleAnnouncementText registerRoleAnnouncementText(RoleAnnouncementTexts.RoleAnnouncementText role) {
         ROLE_ANNOUNCEMENT_TEXTS.add(role);
+        BY_NAME.putIfAbsent(role.name.toLowerCase(Locale.ROOT), role);
         return role;
+    }
+
+    public static @Nullable RoleAnnouncementTexts.RoleAnnouncementText findByRole(@Nullable Role role) {
+        if (role == null) return null;
+        RoleAnnouncementTexts.RoleAnnouncementText found = BY_NAME.get(role.identifier().getPath());
+        if (found == null) found = BY_NAME.get(role.identifier().toTranslationKey());
+        return found;
     }
 
     public static final RoleAnnouncementText BLANK = registerRoleAnnouncementText(new RoleAnnouncementText("", 0xFFFFFF));

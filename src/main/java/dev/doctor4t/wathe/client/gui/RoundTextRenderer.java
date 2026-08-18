@@ -2,6 +2,7 @@ package dev.doctor4t.wathe.client.gui;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.systems.RenderSystem;
+import dev.doctor4t.wathe.api.Role;
 import dev.doctor4t.wathe.api.WatheGameModes;
 import dev.doctor4t.wathe.cca.GameRoundEndComponent;
 import dev.doctor4t.wathe.cca.GameWorldComponent;
@@ -35,6 +36,7 @@ public class RoundTextRenderer {
     private static final int END_DURATION = 200;
     private static RoleAnnouncementTexts.RoleAnnouncementText role = RoleAnnouncementTexts.CIVILIAN;
     private static int welcomeTime = 0;
+    private static boolean welcomeRoleCheckDone = true;
     private static int killers = 0;
     private static int targets = 0;
     private static int endTime = 0;
@@ -207,6 +209,19 @@ public class RoundTextRenderer {
                 }
                 endTime--;
             }
+            if (welcomeTime > 0 && !welcomeRoleCheckDone) {
+                ClientPlayerEntity localPlayer = MinecraftClient.getInstance().player;
+                if (localPlayer != null) {
+                    Role roleFromMap = GameWorldComponent.KEY.get(localPlayer.getWorld()).getRole(localPlayer);
+                    if (roleFromMap != null) {
+                        RoleAnnouncementTexts.RoleAnnouncementText correct = RoleAnnouncementTexts.findByRole(roleFromMap);
+                        if (correct != null) {
+                            RoundTextRenderer.role = correct;
+                        }
+                        welcomeRoleCheckDone = true;
+                    }
+                }
+            }
             GameOptions options = MinecraftClient.getInstance().options;
             if (options != null && options.playerListKey.isPressed()) endTime = Math.max(2, endTime);
         }
@@ -215,6 +230,7 @@ public class RoundTextRenderer {
     public static void startWelcome(RoleAnnouncementTexts.RoleAnnouncementText role, int killers, int targets) {
         RoundTextRenderer.role = role;
         welcomeTime = WELCOME_DURATION;
+        welcomeRoleCheckDone = false;
         RoundTextRenderer.killers = killers;
         RoundTextRenderer.targets = targets;
     }
