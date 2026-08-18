@@ -202,6 +202,55 @@ public class MapVariablesCommand {
                                                         StringArgumentType.getString(context, "value"),
                                                         v -> getMapVarsComponent(context).setCustomMapRoomKeyString(v)))))
                         )
+                        .then(CommandManager.literal("get")
+                                .then(CommandManager.literal("gameMode").executes(context -> sendVar(context.getSource(), "gameMode",
+                                        GameWorldComponent.KEY.get(context.getSource().getWorld()).getGameMode().identifier)))
+                                .then(CommandManager.literal("mapEffect").executes(context -> sendVar(context.getSource(), "mapEffect",
+                                        GameWorldComponent.KEY.get(context.getSource().getWorld()).getMapEffect().identifier)))
+                                .then(CommandManager.literal("spawnPosition").executes(context -> sendVar(context.getSource(), "spawnPosition",
+                                        getMapVarsComponent(context).getSpawnPos())))
+                                .then(CommandManager.literal("spectatorSpawnPosition").executes(context -> sendVar(context.getSource(), "spectatorSpawnPosition",
+                                        getMapVarsComponent(context).getSpectatorSpawnPos())))
+                                .then(CommandManager.literal("readyArea").executes(context -> sendVar(context.getSource(), "readyArea",
+                                        getMapVarsComponent(context).getReadyArea())))
+                                .then(CommandManager.literal("playAreaOffset").executes(context -> sendVar(context.getSource(), "playAreaOffset",
+                                        getMapVarsComponent(context).getPlayAreaOffset())))
+                                .then(CommandManager.literal("playArea").executes(context -> sendVar(context.getSource(), "playArea",
+                                        getMapVarsComponent(context).getPlayArea())))
+                                .then(CommandManager.literal("resetTemplateArea").executes(context -> sendVar(context.getSource(), "resetTemplateArea",
+                                        getMapVarsComponent(context).getResetTemplateArea())))
+                                .then(CommandManager.literal("resetPasteOffset").executes(context -> sendVar(context.getSource(), "resetPasteOffset",
+                                        getMapVarsComponent(context).getResetPasteOffset())))
+                                .then(CommandManager.literal("hornBlockMapEffectId").executes(context -> sendVar(context.getSource(), "hornBlockMapEffectId",
+                                        getMapVarsComponent(context).getHornBlockMapEffectId())))
+                                .then(CommandManager.literal("customMapHasTimeOfDay")
+                                        .executes(context -> sendVar(context.getSource(), "customMapHasTimeOfDay",
+                                                getMapVarsComponent(context).isCustomMapHasTimeOfDay())))
+                                .then(CommandManager.literal("customMapTimeOfDay")
+                                        .executes(context -> sendVar(context.getSource(), "customMapTimeOfDay",
+                                                getMapVarsComponent(context).getCustomMapTimeOfDay())))
+                                .then(CommandManager.literal("customMapHasWeather")
+                                        .executes(context -> sendVar(context.getSource(), "customMapHasWeather",
+                                                getMapVarsComponent(context).isCustomMapHasWeather())))
+                                .then(CommandManager.literal("customMapRaining")
+                                        .executes(context -> sendVar(context.getSource(), "customMapRaining",
+                                                getMapVarsComponent(context).isCustomMapRaining())))
+                                .then(CommandManager.literal("customMapThundering")
+                                        .executes(context -> sendVar(context.getSource(), "customMapThundering",
+                                                getMapVarsComponent(context).isCustomMapThundering())))
+                                .then(CommandManager.literal("customMapUniqueKeys")
+                                        .executes(context -> sendVar(context.getSource(), "customMapUniqueKeys",
+                                                getMapVarsComponent(context).getCustomMapUniqueKeys())))
+                                .then(CommandManager.literal("customMapGuaranteedKeys")
+                                        .executes(context -> sendVar(context.getSource(), "customMapGuaranteedKeys",
+                                                getMapVarsComponent(context).getCustomMapGuaranteedKeys())))
+                                .then(CommandManager.literal("customMapNumRoomKeys")
+                                        .executes(context -> sendVar(context.getSource(), "customMapNumRoomKeys",
+                                                getMapVarsComponent(context).getCustomMapNumRoomKeys())))
+                                .then(CommandManager.literal("customMapRoomKeyString")
+                                        .executes(context -> sendVar(context.getSource(), "customMapRoomKeyString",
+                                                getMapVarsComponent(context).getCustomMapRoomKeyString())))
+                        )
         );
     }
 
@@ -211,6 +260,11 @@ public class MapVariablesCommand {
 
     private static int sendHelp(ServerCommandSource source) {
         source.sendMessage(Text.translatable("wathe.map_variables.help"));
+        return 1;
+    }
+
+    private static int sendVar(ServerCommandSource source, String var, Object toString) {
+        source.sendMessage(Text.literal("Variable " + var + " is " + toString));
         return 1;
     }
 
