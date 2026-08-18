@@ -18,11 +18,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
 
+import net.minecraft.util.collection.DefaultedList;
+
 @Mixin(ScreenHandler.class)
 public class ScreenHandlerJesterGunMixin {
     @Shadow
     @Final
-    private List<Slot> slots;
+    public DefaultedList<Slot> slots;
 
     @Inject(method = "onSlotClick", at = @At("HEAD"), cancellable = true)
     private void wathe$blockJesterTakingGunsFromContainers(int slotId, int button, SlotActionType actionType, PlayerEntity player, CallbackInfo ci) {
