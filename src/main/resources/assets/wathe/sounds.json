@@ -89,6 +89,27 @@
 		],
 		"subtitle": "subtitles.block.door.locked"
 	},
+	"block.vent_hatch.locked": {
+		"sounds": [
+			{
+				"name": "wathe:block/door_locked",
+				"pitch": 1.25
+			}
+		],
+		"subtitle": "subtitles.block.vent_hatch.locked"
+	},
+	"block.vent_hatch.open": {
+		"sounds": [
+			"wathe:block/vent_open"
+		],
+		"subtitle": "subtitles.block.vent_hatch.open"
+	},
+	"block.vent_hatch.close": {
+		"sounds": [
+			"wathe:block/vent_enter"
+		],
+		"subtitle": "subtitles.block.vent_hatch.close"
+	},
 
 	"item.key.door": {
 		"sounds": [

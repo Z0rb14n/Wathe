@@ -1,7 +1,9 @@
 package dev.doctor4t.wathe.item;
 
 import dev.doctor4t.wathe.block.SmallDoorBlock;
+import dev.doctor4t.wathe.block.VentHatchBlock;
 import dev.doctor4t.wathe.block_entity.SmallDoorBlockEntity;
+import dev.doctor4t.wathe.block_entity.VentHatchBlockEntity;
 import dev.doctor4t.wathe.game.GameConstants;
 import dev.doctor4t.wathe.index.WatheSounds;
 import dev.doctor4t.wathe.util.AdventureUsable;
@@ -26,6 +28,24 @@ public class LockpickItem extends Item implements AdventureUsable {
         World world = context.getWorld();
         BlockPos pos = context.getBlockPos();
         BlockState state = world.getBlockState(pos);
+
+        if (state.getBlock() instanceof VentHatchBlock) {
+            if (world.getBlockEntity(pos) instanceof VentHatchBlockEntity entity
+                    && player != null && player.isSneaking() && !entity.isBlasted()) {
+                entity.jam();
+
+                if (!player.isCreative()) {
+                    player.getItemCooldownManager().set(this, GameConstants.ITEM_COOLDOWNS.get(this));
+                }
+
+                if (!world.isClient) {
+                    world.playSound(null, pos, WatheSounds.ITEM_LOCKPICK_DOOR, SoundCategory.BLOCKS, 1f, 1f);
+                }
+                return ActionResult.SUCCESS;
+            }
+
+            return ActionResult.PASS;
+        }
 
         if (state.getBlock() instanceof SmallDoorBlock) {
             BlockPos lowerPos = state.get(SmallDoorBlock.HALF) == DoubleBlockHalf.LOWER ? pos : pos.down();

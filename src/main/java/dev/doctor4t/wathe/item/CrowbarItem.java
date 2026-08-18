@@ -1,6 +1,7 @@
 package dev.doctor4t.wathe.item;
 
 import dev.doctor4t.wathe.block_entity.DoorBlockEntity;
+import dev.doctor4t.wathe.block_entity.VentHatchBlockEntity;
 import dev.doctor4t.wathe.game.GameConstants;
 import dev.doctor4t.wathe.index.WatheSounds;
 import dev.doctor4t.wathe.util.AdventureUsable;
@@ -22,9 +23,13 @@ public class CrowbarItem extends Item implements AdventureUsable {
     public ActionResult useOnBlock(ItemUsageContext context) {
         World world = context.getWorld();
         BlockEntity entity = world.getBlockEntity(context.getBlockPos());
-        if (!(entity instanceof DoorBlockEntity)) entity = world.getBlockEntity(context.getBlockPos().down());
+        if (!(entity instanceof DoorBlockEntity) && !(entity instanceof VentHatchBlockEntity)) {
+            entity = world.getBlockEntity(context.getBlockPos().down());
+        }
         PlayerEntity player = context.getPlayer();
-        if (entity instanceof DoorBlockEntity door && !door.isBlasted() && player != null) {
+        boolean canBlast = (entity instanceof DoorBlockEntity door && !door.isBlasted())
+                || (entity instanceof VentHatchBlockEntity hatch && !hatch.isBlasted());
+        if (canBlast && player != null) {
             if (!player.isCreative()) player.getItemCooldownManager().set(this, 6000);
             world.playSound(null, context.getBlockPos(), WatheSounds.ITEM_CROWBAR_PRY, SoundCategory.BLOCKS, 2.5f, 1f);
             player.swingHand(Hand.MAIN_HAND, true);
@@ -33,7 +38,11 @@ public class CrowbarItem extends Item implements AdventureUsable {
                 player.getItemCooldownManager().set(this, GameConstants.ITEM_COOLDOWNS.get(this));
             }
 
-            door.blast();
+            if (entity instanceof DoorBlockEntity door) {
+                door.blast();
+            } else if (entity instanceof VentHatchBlockEntity hatch) {
+                hatch.blast();
+            }
         }
         return super.useOnBlock(context);
     }

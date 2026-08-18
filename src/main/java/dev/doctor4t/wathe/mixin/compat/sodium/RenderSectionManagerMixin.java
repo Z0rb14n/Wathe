@@ -24,7 +24,7 @@ public class RenderSectionManagerMixin {
 
     @ModifyExpressionValue(method = "getSearchDistance",
             at = @At(value = "FIELD",
-                    target = "Lnet/caffeinemc/mods/sodium/client/gui/SodiumGameOptions$PerformanceSettings;useFogOcclusion:Z"),
+                    target = "Lnet/caffeinemc/mods/sodium/client/gui/SodiumOptions$PerformanceSettings;useFogOcclusion:Z"),
             remap = false)
     private boolean wathe$forceNotUseFogOcclusion(boolean original) {
         if (WatheClient.isTrainMoving()) {
