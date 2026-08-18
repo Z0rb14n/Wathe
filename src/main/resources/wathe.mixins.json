@@ -62,6 +62,7 @@
     "client.self.NoteItemMixin",
     "client.self.TrimmedBedBlockEntityMixin",
     "client.ui.InGameHudMixin",
+    "client.ui.LimitedInventoryScreenRowLabelMixin",
     "client.ui.TooltipBackgroundRendererMixin",
     "compat.sodium.DefaultChunkRendererMixin",
     "compat.sodium.DefaultShaderInterfaceMixin",
