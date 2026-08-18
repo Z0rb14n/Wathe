@@ -42,6 +42,7 @@
     "client.items.HeldItemFeatureRendererMixin",
     "client.items.HeldItemRendererMixin",
     "client.restrictions.ChatHudMixin",
+    "client.restrictions.ClientPlayNetworkHandlerMixin",
     "client.restrictions.CreativeInventoryScreenMixin",
     "client.restrictions.DebugHudMixin",
     "client.restrictions.EntityRendererMixin",
