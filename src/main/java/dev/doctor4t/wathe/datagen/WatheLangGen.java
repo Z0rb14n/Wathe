@@ -87,12 +87,18 @@ public class WatheLangGen extends FabricLanguageProvider {
         builder.add("subtitles.block.cargo_box.close", "Cargo Box closes");
         builder.add("subtitles.block.cargo_box.open", "Cargo Box opens");
         builder.add("subtitles.block.door.toggle", "Door operates");
+        builder.add("subtitles.block.vent_hatch.locked", "Vent hatch locked");
+        builder.add("subtitles.block.vent_hatch.open", "Vent hatch opens");
+        builder.add("subtitles.block.vent_hatch.close", "Vent hatch closes");
         builder.add("subtitles.item.crowbar.pry", "Crowbar pries door");
 
         builder.add("tip.door.locked", "This door is locked and cannot be opened.");
         builder.add("tip.door.requires_key", "This door is locked and requires a key to be opened.");
         builder.add("tip.door.requires_different_key", "This door is locked and requires a different key to be opened.");
         builder.add("tip.door.jammed", "This door is jammed and cannot be opened at the moment!");
+        builder.add("tip.hatch.requires_key", "This vent hatch is locked and requires a key to be opened.");
+        builder.add("tip.hatch.requires_different_key", "This vent hatch is locked and requires a different key to be opened.");
+        builder.add("tip.hatch.jammed", "This vent hatch is jammed and cannot be opened at the moment!");
         builder.add("tip.derringer.used", "Used: cannot be shot anymore, get a kill for another chance!");
 
         builder.add("tip.cooldown", "On cooldown: %s");
