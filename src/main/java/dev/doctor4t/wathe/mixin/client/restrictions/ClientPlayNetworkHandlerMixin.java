@@ -13,8 +13,11 @@ public class ClientPlayNetworkHandlerMixin {
     @Inject(method = "onPlayerRespawn", at = @At("HEAD"))
     private void wathe$resetDebugStateOnRespawn(PlayerRespawnS2CPacket packet, CallbackInfo ci) {
         MinecraftClient client = MinecraftClient.getInstance();
-        if (client.getDebugHud().shouldShowDebugHud()) {
-            client.getDebugHud().toggleDebugHud();
+        if (client.getDebugHud() instanceof DebugHudAccessor accessor) {
+            accessor.setShowDebugHud(false);
+            accessor.setRenderingChartVisible(false);
+            accessor.setRenderingAndTickChartsVisible(false);
+            accessor.setPacketSizeAndPingChartsVisible(false);
         }
         client.getEntityRenderDispatcher().setRenderHitboxes(false);
     }

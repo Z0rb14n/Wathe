@@ -44,6 +44,7 @@
     "client.restrictions.ChatHudMixin",
     "client.restrictions.ClientPlayNetworkHandlerMixin",
     "client.restrictions.CreativeInventoryScreenMixin",
+    "client.restrictions.DebugHudAccessor",
     "client.restrictions.DebugHudMixin",
     "client.restrictions.EntityRendererMixin",
     "client.restrictions.GameOptionsMixin",
