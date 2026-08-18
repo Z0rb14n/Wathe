@@ -1,6 +1,7 @@
 package dev.doctor4t.wathe.client.gui.screen.ingame;
 
 import dev.doctor4t.wathe.Wathe;
+import dev.doctor4t.wathe.api.Role;
 import dev.doctor4t.wathe.cca.GameWorldComponent;
 import dev.doctor4t.wathe.client.gui.StoreRenderer;
 import dev.doctor4t.wathe.game.GameConstants;
@@ -9,7 +10,9 @@ import dev.doctor4t.wathe.util.StoreBuyPayload;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.screen.PlayerScreenHandler;
@@ -59,11 +62,45 @@ public class LimitedInventoryScreen extends LimitedHandledScreen<PlayerScreenHan
         context.getMatrices().pop();
     }
 
+    private static final int ROLE_ROW_OFFSET = 80;
+    private static final int MODIFIER_ROW_OFFSET = 105;
+
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
         this.drawMouseoverTooltip(context, mouseX, mouseY);
         StoreRenderer.renderHud(this.textRenderer, this.player, context, delta);
+        this.renderRowLabels(context);
+    }
+
+    private void renderRowLabels(DrawContext context) {
+        if (this.player == null) return;
+        Integer roleRowY = findRowY(ROLE_ROW_OFFSET);
+        if (roleRowY != null) {
+            Role role = GameWorldComponent.KEY.get(this.player.getWorld()).getRole(this.player);
+            if (role != null) {
+                drawLabel(context, Text.translatable("announcement.role." + role.identifier().toTranslationKey()).withColor(role.color()), roleRowY);
+            }
+        }
+        Integer modifierRowY = findRowY(MODIFIER_ROW_OFFSET);
+        if (modifierRowY != null) {
+            drawLabel(context, Text.translatable("announcement.role.noellesroles.guesser"), modifierRowY);
+        }
+    }
+
+    private Integer findRowY(int rowOffset) {
+        int centerY = (this.height - 32) / 2;
+        for (Element child : this.children()) {
+            if (child instanceof ClickableWidget widget && widget.getY() >= centerY + rowOffset - 6 && widget.getY() <= centerY + rowOffset + 6) {
+                return widget.getY();
+            }
+        }
+        return null;
+    }
+
+    private void drawLabel(DrawContext context, Text label, int rowY) {
+        int x = this.width / 2 - this.textRenderer.getWidth(label) / 2;
+        context.drawTextWithShadow(this.textRenderer, label, x, rowY - this.textRenderer.fontHeight - 2, 0xFFFFFF);
     }
 
     public static class StoreItemWidget extends ButtonWidget {
