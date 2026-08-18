@@ -72,12 +72,39 @@ public class GameSettingsCommand {
                                         .then(CommandManager.argument("enabled", BoolArgumentType.bool())
                                                 .executes(context -> enableBounds(context.getSource(), BoolArgumentType.getBool(context, "enabled"))))
                                 )
+                        ).then(CommandManager.literal("get")
+                                .then(CommandManager.literal("weights")
+                                        .executes(context -> sendVar(context.getSource(), "weightsEnabled", GameWorldComponent.KEY.get(context.getSource().getWorld()).areWeightsEnabled()))
+                                )
+                                .then(CommandManager.literal("autoStart")
+                                        .executes(context -> sendVar(context.getSource(), "autoStart", AutoStartComponent.KEY.get(context.getSource().getWorld()).startTime))
+                                )
+                                .then(CommandManager.literal("backfire")
+                                        .executes(context -> sendVar(context.getSource(), "backfireChance", GameWorldComponent.KEY.get(context.getSource().getWorld()).getBackfireChance()))
+                                )
+                                .then(CommandManager.literal("roleDividend")
+                                        .then(CommandManager.literal("killer")
+                                                .executes(context -> sendVar(context.getSource(), "killerDividend", GameWorldComponent.KEY.get(context.getSource().getWorld()).getKillerDividend()))
+                                        )
+                                        .then(CommandManager.literal("vigilante")
+                                                .executes(context -> sendVar(context.getSource(), "vigilanteDividend", GameWorldComponent.KEY.get(context.getSource().getWorld()).getVigilanteDividend()))
+                                        )
+                                )
+                                .then(CommandManager.literal("bounds")
+                                        .executes(context -> sendVar(context.getSource(), "bounds", GameWorldComponent.KEY.get(context.getSource().getWorld()).isBound()))
+                                )
                         )
         );
     }
 
     private static int sendHelp(ServerCommandSource source) {
         source.sendMessage(Text.translatable("wathe.game_settings.help"));
+        return 1;
+    }
+
+    private static int sendVar(ServerCommandSource source, String var, Object toString) {
+        // screw localization
+        source.sendMessage(Text.literal("Game Setting Variable " + var + " is " + toString));
         return 1;
     }
 
