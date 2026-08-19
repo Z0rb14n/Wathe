@@ -6,6 +6,7 @@ import dev.doctor4t.wathe.block_entity.VentHatchBlockEntity;
 import dev.doctor4t.wathe.index.WatheBlockEntities;
 import dev.doctor4t.wathe.index.WatheItems;
 import dev.doctor4t.wathe.index.WatheSounds;
+import dev.doctor4t.wathe.index.tag.WatheItemTags;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
@@ -17,6 +18,8 @@ import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.LoreComponent;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.registry.Registries;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
@@ -25,6 +28,7 @@ import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -85,6 +89,18 @@ public class VentHatchBlock extends WallMountedBlock implements BlockEntityProvi
         return VentHatchBlockEntity::serverTick;
     }
 
+    private static boolean isMasterKey(ItemStack stack) {
+        if (stack.isEmpty()) {
+            return false;
+        }
+        if (stack.isIn(WatheItemTags.MASTER_KEYS)) {
+            return true;
+        }
+        Identifier id = Registries.ITEM.getId(stack.getItem());
+        return (id.getNamespace().equals("noellesroles") && id.getPath().equals("master_key"))
+                || (id.getNamespace().equals("harpysimpleroles") && id.getPath().equals("master_key"));
+    }
+
     @Override
     protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
         if (world.getBlockEntity(pos) instanceof VentHatchBlockEntity entity) {
@@ -101,9 +117,11 @@ public class VentHatchBlock extends WallMountedBlock implements BlockEntityProvi
             }
 
             boolean requiresKey = !entity.getKeyName().isEmpty();
-            boolean hasLockpick = player.getMainHandStack().isOf(WatheItems.LOCKPICK);
+            ItemStack heldItem = player.getMainHandStack();
+            boolean hasLockpick = heldItem.isOf(WatheItems.LOCKPICK);
+            boolean isMasterKey = isMasterKey(heldItem);
 
-            if (player.getMainHandStack().isOf(WatheItems.CROWBAR)) {
+            if (heldItem.isOf(WatheItems.CROWBAR)) {
                 return ActionResult.FAIL;
             }
 
@@ -114,12 +132,16 @@ public class VentHatchBlock extends WallMountedBlock implements BlockEntityProvi
                 player.sendMessage(Text.translatable("tip.hatch.jammed"), true);
                 return ActionResult.FAIL;
             } else if (requiresKey) {
-                if (player.getMainHandStack().isOf(WatheItems.KEY) || hasLockpick) {
-                    LoreComponent lore = player.getMainHandStack().get(DataComponentTypes.LORE);
+                if (heldItem.isOf(WatheItems.KEY) || hasLockpick || isMasterKey) {
+                    LoreComponent lore = heldItem.get(DataComponentTypes.LORE);
                     boolean isRightKey = lore != null && !lore.lines().isEmpty() && lore.lines().getFirst().getString().equals(entity.getKeyName());
-                    if (isRightKey || hasLockpick) {
-                        if (isRightKey)
+                    if (isRightKey || hasLockpick || isMasterKey) {
+                        if (isRightKey || isMasterKey) {
                             world.playSound(null, pos, WatheSounds.ITEM_KEY_DOOR, SoundCategory.BLOCKS, 1f, 1f);
+                            if (isMasterKey && !player.isCreative() && heldItem.isDamageable()) {
+                                heldItem.damage(1, player, player.getSlotForHand(player.getActiveHand()));
+                            }
+                        }
                         if (hasLockpick)
                             world.playSound(null, pos, WatheSounds.ITEM_LOCKPICK_DOOR, SoundCategory.BLOCKS, 1f, 1f);
                         return this.toggle(state, world, pos);
