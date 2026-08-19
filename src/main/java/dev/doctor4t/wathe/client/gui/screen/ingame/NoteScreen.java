@@ -146,8 +146,8 @@ public class NoteScreen extends Screen {
             int p = o - this.textRenderer.getWidth(string) / 2;
             if (bl && j < string.length()) context.fill(p, m - 1, p + 1, m + 10, Colors.BLACK | i);
             if (k == j) continue;
-            int q = Math.min(j, k);
-            int r = Math.max(j, k);
+            int q = Math.clamp(Math.min(j, k), 0, string.length());
+            int r = Math.clamp(Math.max(j, k), 0, string.length());
             int s = this.textRenderer.getWidth(string.substring(0, q)) - this.textRenderer.getWidth(string) / 2;
             int t = this.textRenderer.getWidth(string.substring(0, r)) - this.textRenderer.getWidth(string) / 2;
             int u = Math.min(s, t);
@@ -165,6 +165,8 @@ public class NoteScreen extends Screen {
     private void resetEditing() {
         if (this.client == null || this.client.player == null) return;
         Arrays.fill(this.text, "");
+        this.currentRow = 0;
+        if (this.selectionManager != null) this.selectionManager.putCursorAtEnd();
         PlayerNoteComponent.KEY.get(this.client.player).setNote(this.text[0], this.text[1], this.text[2], this.text[3]);
     }
 
