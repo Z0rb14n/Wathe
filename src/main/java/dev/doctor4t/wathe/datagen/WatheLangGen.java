@@ -149,6 +149,8 @@ public class WatheLangGen extends FabricLanguageProvider {
                     playArea: The play area outside which players will be eliminated.
                     resetTemplateArea: The template that will be copied over the play area in order to reset the map.
                     resetPasteOffset: The offset at which the template should be pasted.
+                    lobbyHasTimeOfDay: Whether the lobby should override the time of day (default: false).
+                    lobbyTimeOfDay: The time of day tick value for the lobby when lobbyHasTimeOfDay is true (default: 6000 = day, 12800 = sundown, 18000 = night).
                 """);
         builder.add("wathe.map_variables.set", "Map variable %s successfully set to %s");
 

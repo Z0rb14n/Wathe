@@ -201,6 +201,16 @@ public class MapVariablesCommand {
                                                 .executes(context -> setValue(context.getSource(), "customMapRoomKeyString",
                                                         StringArgumentType.getString(context, "value"),
                                                         v -> getMapVarsComponent(context).setCustomMapRoomKeyString(v)))))
+                                .then(CommandManager.literal("lobbyHasTimeOfDay")
+                                        .then(CommandManager.argument("value", BoolArgumentType.bool())
+                                                .executes(context -> setValue(context.getSource(), "lobbyHasTimeOfDay",
+                                                        BoolArgumentType.getBool(context, "value"),
+                                                        v -> getMapVarsComponent(context).setLobbyHasTimeOfDay(v)))))
+                                .then(CommandManager.literal("lobbyTimeOfDay")
+                                        .then(CommandManager.argument("value", IntegerArgumentType.integer(0))
+                                                .executes(context -> setValue(context.getSource(), "lobbyTimeOfDay",
+                                                        IntegerArgumentType.getInteger(context, "value"),
+                                                        v -> getMapVarsComponent(context).setLobbyTimeOfDay(v)))))
                         )
                         .then(CommandManager.literal("get")
                                 .then(CommandManager.literal("gameMode").executes(context -> sendVar(context.getSource(), "gameMode",
@@ -250,6 +260,12 @@ public class MapVariablesCommand {
                                 .then(CommandManager.literal("customMapRoomKeyString")
                                         .executes(context -> sendVar(context.getSource(), "customMapRoomKeyString",
                                                 getMapVarsComponent(context).getCustomMapRoomKeyString())))
+                                .then(CommandManager.literal("lobbyHasTimeOfDay")
+                                        .executes(context -> sendVar(context.getSource(), "lobbyHasTimeOfDay",
+                                                getMapVarsComponent(context).isLobbyHasTimeOfDay())))
+                                .then(CommandManager.literal("lobbyTimeOfDay")
+                                        .executes(context -> sendVar(context.getSource(), "lobbyTimeOfDay",
+                                                getMapVarsComponent(context).getLobbyTimeOfDay())))
                         )
         );
     }

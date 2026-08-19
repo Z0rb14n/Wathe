@@ -5,6 +5,7 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import dev.doctor4t.wathe.Wathe;
 import dev.doctor4t.wathe.cca.GameWorldComponent;
 import dev.doctor4t.wathe.cca.MapVariablesWorldComponent;
+import dev.doctor4t.wathe.api.WatheMapEffects;
 import dev.doctor4t.wathe.util.Scheduler;
 import dev.doctor4t.wathe.world.WatheMapWorlds;
 import net.minecraft.command.CommandSource;
@@ -85,6 +86,9 @@ public class MapCommand {
         if (previousWasMapWorld) {
             WatheMapWorlds.unload(source.getServer(), previousWorld);
         }
+
+        // Initialize lobby map effects (visuals, time of day, etc.)
+        WatheMapEffects.HARPY_EXPRESS_LOBBY.initializeMapEffects(target, target.getPlayers());
 
         source.sendMessage(Text.literal("Swapped to map '" + name + "'."));
         return 1;

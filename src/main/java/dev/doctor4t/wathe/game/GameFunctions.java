@@ -208,7 +208,12 @@ public class GameFunctions {
         WorldBlackoutComponent.KEY.get(world).reset();
         TrainWorldComponent trainComponent = TrainWorldComponent.KEY.get(world);
         trainComponent.setSpeed(0);
+
+        MapVariablesWorldComponent mapVars = MapVariablesWorldComponent.KEY.get(world);
         trainComponent.setTimeOfDay(TrainWorldComponent.TimeOfDay.DAY);
+        if (mapVars.isLobbyHasTimeOfDay()) {
+            world.setTimeOfDay(mapVars.getLobbyTimeOfDay());
+        }
 
         // discard all player bodies
         for (PlayerBodyEntity body : world.getEntitiesByType(WatheEntities.PLAYER_BODY, playerBodyEntity -> true))
