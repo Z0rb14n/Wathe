@@ -11,6 +11,7 @@ import dev.doctor4t.wathe.index.WatheItems;
 import dev.doctor4t.wathe.index.tag.WatheItemTags;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.client.render.item.HeldItemRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -27,8 +28,15 @@ public class MinecraftClientMixin {
     @Nullable
     public ClientPlayerEntity player;
 
+    @Shadow
+    @Nullable
+    public WorldRenderer worldRenderer;
+
     @ModifyReturnValue(method = "hasOutline", at = @At("RETURN"))
     public boolean wathe$hasInstinctOutline(boolean original, @Local(argsOnly = true) Entity entity) {
+        if (this.worldRenderer == null || this.worldRenderer.getEntityOutlinesFramebuffer() == null) {
+            return false;
+        }
         if (WatheClient.getInstinctHighlight(entity) != -1) return true;
         return original;
     }
