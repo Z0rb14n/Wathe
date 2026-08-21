@@ -22,8 +22,12 @@ public class WatheItemTagGen extends FabricTagProvider.ItemTagProvider {
                 .add(WatheItems.REVOLVER)
                 .add(WatheItems.DERRINGER);
 
+        this.getOrCreateTagBuilder(WatheItemTags.MASTER_KEYS)
+                .addOptional(Identifier.of("noellesroles", "master_key"))
+                .addOptional(Identifier.of("harpysimpleroles", "master_key"));
+
         this.getOrCreateTagBuilder(WatheItemTags.KEYS)
-                .addOptional(Identifier.of("noellesroles", "master_key"));
+                .addTag(WatheItemTags.MASTER_KEYS);
 
         this.getOrCreateTagBuilder(WatheItemTags.PSYCHOSIS_ITEMS)
                 .add(Items.AIR)
