@@ -136,14 +136,15 @@ public class VentHatchBlock extends WallMountedBlock implements BlockEntityProvi
                     LoreComponent lore = heldItem.get(DataComponentTypes.LORE);
                     boolean isRightKey = lore != null && !lore.lines().isEmpty() && lore.lines().getFirst().getString().equals(entity.getKeyName());
                     if (isRightKey || hasLockpick || isMasterKey) {
-                        if (isRightKey || isMasterKey) {
+                        if (isRightKey) {
                             world.playSound(null, pos, WatheSounds.ITEM_KEY_DOOR, SoundCategory.BLOCKS, 1f, 1f);
+                        }
+                        if (hasLockpick || isMasterKey) {
+                            world.playSound(null, pos, WatheSounds.ITEM_LOCKPICK_DOOR, SoundCategory.BLOCKS, 1f, 1f);
                             if (isMasterKey && !player.isCreative() && heldItem.isDamageable()) {
                                 heldItem.damage(1, player, player.getSlotForHand(player.getActiveHand()));
                             }
                         }
-                        if (hasLockpick)
-                            world.playSound(null, pos, WatheSounds.ITEM_LOCKPICK_DOOR, SoundCategory.BLOCKS, 1f, 1f);
                         return this.toggle(state, world, pos);
                     } else {
                         world.playSound(null, pos, WatheSounds.BLOCK_VENT_HATCH_LOCKED, SoundCategory.BLOCKS, 1f, 1f);
