@@ -20,9 +20,10 @@
     "LivingEntityMixin",
     "PlayerEntityMixin",
     "PlayerInventoryMixin",
+    "ScreenHandlerJesterGunMixin",
     "ServerPlayerEntityMixin",
     "ServerPlayNetworkHandlerMixin",
-    "client.LivingEntityRendererMixin"
+    "compat.kinswathe.WrenchItemMixin"
   ],
   "injectors": {
     "defaultRequire": 1
@@ -31,6 +32,7 @@
     "client.AbstractClientPlayerEntityMixin",
     "client.EntityRendererDispatchMixin",
     "client.GameRendererMixin",
+    "client.LivingEntityRendererMixin",
     "client.MinecraftClientMixin",
     "client.PlayerEntityRendererMixin",
     "client.ResourceTextureMixin",
@@ -41,7 +43,9 @@
     "client.items.HeldItemFeatureRendererMixin",
     "client.items.HeldItemRendererMixin",
     "client.restrictions.ChatHudMixin",
+    "client.restrictions.ClientPlayNetworkHandlerMixin",
     "client.restrictions.CreativeInventoryScreenMixin",
+    "client.restrictions.DebugHudAccessor",
     "client.restrictions.DebugHudMixin",
     "client.restrictions.EntityRendererMixin",
     "client.restrictions.GameOptionsMixin",
