@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import dev.doctor4t.wathe.Wathe;
+import dev.doctor4t.wathe.api.WatheMapEffects;
 import dev.doctor4t.wathe.cca.MapVariablesWorldComponent;
 import dev.doctor4t.wathe.mixin.MinecraftServerAccessor;
 import net.fabricmc.loader.api.FabricLoader;
@@ -72,6 +73,9 @@ public class WatheMapWorlds {
             ServerWorld world = load(server, lastName);
             currentMapName = lastName;
             teleportAll(server, world);
+
+            // Initialize lobby map effects (visuals, time of day, etc.)
+            WatheMapEffects.HARPY_EXPRESS_LOBBY.initializeMapEffects(world, world.getPlayers());
         } catch (Exception e) {
             Wathe.LOGGER.error("Failed to auto-load last map world '{}': {}", lastName, e.getMessage());
         }

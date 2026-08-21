@@ -1,6 +1,7 @@
 package dev.doctor4t.wathe.game.mapeffect;
 
 import dev.doctor4t.wathe.api.MapEffect;
+import dev.doctor4t.wathe.cca.MapVariablesWorldComponent;
 import dev.doctor4t.wathe.cca.TrainWorldComponent;
 import dev.doctor4t.wathe.index.WatheItems;
 import net.minecraft.component.DataComponentTypes;
@@ -30,6 +31,11 @@ public class HarpyExpressLobbyMapEffect extends MapEffect {
         trainWorldComponent.setHud(true);
         trainWorldComponent.setSpeed(0);
         trainWorldComponent.setTime(0);
+
+        MapVariablesWorldComponent mapVars = MapVariablesWorldComponent.KEY.get(serverWorld);
+        if (mapVars.isLobbyHasTimeOfDay()) {
+            serverWorld.setTimeOfDay(mapVars.getLobbyTimeOfDay());
+        }
     }
 
     @Override
