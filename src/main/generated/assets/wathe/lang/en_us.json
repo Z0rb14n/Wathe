@@ -359,6 +359,8 @@
   "wathe.midnightconfig.leftClickShooting.tooltip": "Fire supported guns with the Attack key (left-click by default) instead of Use Item. Only affects this client.",
   "tip.gun.shoot": "%s to shoot",
   "wathe.midnightconfig.title": "The Last Voyage of the Harpy Express - Config",
+  "wathe.midnightconfig.streamTrainScenery": "Stream Train Scenery",
+  "wathe.midnightconfig.streamTrainScenery.tooltip": "Retains only nearby and upcoming scenery templates. Disable to keep the full source area loaded on the client.",
   "wathe.midnightconfig.ultraPerfMode": "Ultra Performance Mode",
   "wathe.midnightconfig.ultraPerfMode.tooltip": "Restricts chunk rendering to train height for maximum performance."
 }

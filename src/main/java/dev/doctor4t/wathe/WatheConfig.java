@@ -6,6 +6,8 @@ public class WatheConfig extends MidnightConfig {
     @Entry
     public static boolean ultraPerfMode = false;
     @Entry
+    public static boolean streamTrainScenery = true;
+    @Entry
     public static boolean disableScreenShake = false;
     @Entry
     public static boolean leftClickShooting = false;

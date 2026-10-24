@@ -24,6 +24,7 @@ import dev.doctor4t.wathe.client.render.entity.FirecrackerEntityRenderer;
 import dev.doctor4t.wathe.client.render.entity.HornBlockEntityRenderer;
 import dev.doctor4t.wathe.client.render.entity.NoteEntityRenderer;
 import dev.doctor4t.wathe.client.util.WatheItemTooltips;
+import dev.doctor4t.wathe.client.util.SceneryStreamingClient;
 import dev.doctor4t.wathe.entity.FirecrackerEntity;
 import dev.doctor4t.wathe.entity.NoteEntity;
 import dev.doctor4t.wathe.game.GameConstants;
@@ -160,6 +161,7 @@ public class WatheClient implements ClientModInitializer {
             }
         });
         ClientPlayConnectionEvents.DISCONNECT.register(WatheClient::onDisconnect);
+        ClientTickEvents.END_CLIENT_TICK.register(SceneryStreamingClient::tick);
 
         ClientPreAttackCallback.EVENT.register((client, player, clickCount) -> {
             if (player.getMainHandStack().getItem() instanceof AttackUseItem) {

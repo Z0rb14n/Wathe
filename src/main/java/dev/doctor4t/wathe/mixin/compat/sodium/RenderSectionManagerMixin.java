@@ -11,6 +11,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(RenderSectionManager.class)
 public class RenderSectionManagerMixin {
 
+    @Inject(method = "isOutOfGraph", at = @At("HEAD"), remap = false, cancellable = true)
+    private void wathe$visitDisconnectedTemplates(CallbackInfoReturnable<Boolean> cir) {
+        // Selective retention leaves gaps between source strips. Graph traversal
+        // cannot cross those gaps; the tree visits every resident template island.
+        if (WatheClient.isTrainMoving()) cir.setReturnValue(true);
+    }
+
     @Inject(method = "shouldUseOcclusionCulling",
             at = @At("HEAD"),
             remap = false,

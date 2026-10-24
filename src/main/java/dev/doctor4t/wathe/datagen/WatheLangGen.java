@@ -165,6 +165,8 @@ public class WatheLangGen extends FabricLanguageProvider {
 
         builder.add("wathe.midnightconfig.title", "The Last Voyage of the Harpy Express - Config");
         builder.add("wathe.midnightconfig.ultraPerfMode", "Ultra Performance Mode");
+        builder.add("wathe.midnightconfig.streamTrainScenery", "Stream Train Scenery");
+        builder.add("wathe.midnightconfig.streamTrainScenery.tooltip", "Retains only nearby and upcoming scenery templates. Disable to keep the full source area loaded on the client.");
         builder.add("wathe.midnightconfig.ultraPerfMode.tooltip", "Restricts chunk rendering to train height for maximum performance.");
         builder.add("wathe.midnightconfig.disableScreenShake", "Disable Screen Shake");
         builder.add("wathe.midnightconfig.leftClickShooting", "Left-click Shooting");

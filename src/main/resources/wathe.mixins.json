@@ -8,6 +8,8 @@
     "PlayerManagerMixin"
   ],
   "mixins": [
+    "scenery.ChunkFilterMixin",
+    "scenery.ServerChunkLoadingManagerMixin",
     "compat.shooterpunishments.SavedSettingMixin",
     "compat.shooterpunishments.ItemPickupMixin",
     "compat.shooterpunishments.RoundStartMixin",

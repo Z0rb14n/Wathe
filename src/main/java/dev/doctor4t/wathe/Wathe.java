@@ -151,6 +151,8 @@ public class Wathe implements ModInitializer {
         PayloadTypeRegistry.playC2S().register(StoreBuyPayload.ID, StoreBuyPayload.CODEC);
         PayloadTypeRegistry.playC2S().register(NoteEditPayload.ID, NoteEditPayload.CODEC);
         PayloadTypeRegistry.playC2S().register(AttackUsePayload.ID, AttackUsePayload.CODEC);
+        PayloadTypeRegistry.playC2S().register(SceneryViewDistancePayload.ID, SceneryViewDistancePayload.CODEC);
+        ServerPlayNetworking.registerGlobalReceiver(SceneryViewDistancePayload.ID, new SceneryViewDistancePayload.Receiver());
         ServerPlayNetworking.registerGlobalReceiver(KnifeStabPayload.ID, new KnifeStabPayload.Receiver());
         ServerPlayNetworking.registerGlobalReceiver(GunShootPayload.ID, new GunShootPayload.Receiver());
         ServerPlayNetworking.registerGlobalReceiver(StoreBuyPayload.ID, new StoreBuyPayload.Receiver());
