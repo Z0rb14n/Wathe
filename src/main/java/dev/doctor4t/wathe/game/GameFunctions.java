@@ -21,6 +21,7 @@ import dev.doctor4t.wathe.index.WatheEntities;
 import dev.doctor4t.wathe.index.WatheItems;
 import dev.doctor4t.wathe.index.WatheSounds;
 import dev.doctor4t.wathe.network.AnnounceEndingPayload;
+import dev.doctor4t.wathe.network.PlayerDeathEffectsPayload;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -293,6 +294,7 @@ public class GameFunctions {
         }
 
         dev.doctor4t.wathe.stats.WatheStats.recordKill(victim, killer, deathReason);
+        PlayerDeathEffectsPayload.send(serverPlayerEntity, killer, deathReason);
 
         if (killer != null) {
             if (GameWorldComponent.KEY.get(killer.getWorld()).canUseKillerFeatures(killer)) {

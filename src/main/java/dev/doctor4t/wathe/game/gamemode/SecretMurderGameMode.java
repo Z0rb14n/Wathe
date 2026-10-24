@@ -57,6 +57,10 @@ public class SecretMurderGameMode extends GameMode {
         PlayerEntity lastPlayer = null;
         for (PlayerEntity player : serverWorld.getPlayers()) {
             if (GameFunctions.isPlayerAliveAndSurvival(player)) {
+                int income = GameConstants.PASSIVE_MONEY_TICKER.apply(serverWorld.getTime());
+                if (income > 0 && gameWorldComponent.canUseKillerFeatures(player)) {
+                    PlayerShopComponent.KEY.get(player).addToBalance(income);
+                }
                 playersLeft++;
                 lastPlayer = player;
             }

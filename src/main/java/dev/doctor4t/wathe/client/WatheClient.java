@@ -31,6 +31,7 @@ import dev.doctor4t.wathe.game.GameFunctions;
 import dev.doctor4t.wathe.index.*;
 import dev.doctor4t.wathe.item.AttackUseItem;
 import dev.doctor4t.wathe.client.util.GunControls;
+import dev.doctor4t.wathe.client.util.SecretMurderCohorts;
 import dev.doctor4t.wathe.network.*;
 import dev.doctor4t.wathe.util.ConfigSyncPayload;
 import dev.doctor4t.wathe.util.HandParticleManager;
@@ -81,6 +82,8 @@ public class WatheClient implements ClientModInitializer {
     public static PlayerMoodComponent moodComponent;
 
     public static final List<UUID> SECRET_MURDER_FAKE_COHORTS = new ArrayList<>();
+    private static boolean secretMurderCohortsAssigned;
+    private static GameWorldComponent secretMurderCohortGame;
 
     public static final Map<UUID, PlayerListEntry> PLAYER_ENTRIES_CACHE = Maps.newHashMap();
 
@@ -226,18 +229,23 @@ public class WatheClient implements ClientModInitializer {
 
             // populate the fake killer cohort list for secret murder
             GameWorldComponent gameWorldComponent = GameWorldComponent.KEY.get(clientWorld);
-            if (gameWorldComponent.getGameMode() == WatheGameModes.SECRET_MURDER && gameWorldComponent.isRunning()) {
-                if (SECRET_MURDER_FAKE_COHORTS.isEmpty()) {
-                    List<AbstractClientPlayerEntity> playerList = new ArrayList<>(clientWorld.getPlayers().stream().filter(player -> GameFunctions.isPlayerAliveAndSurvival(player) && !player.getUuid().equals(MinecraftClient.getInstance().player.getUuid())).toList());
-                    int killerCohortCount = (int) Math.floor((double) playerList.size() / gameComponent.getKillerDividend());
-                    for (int i = 0; i < killerCohortCount - 1; i++) {
-                        int randomIndex = clientWorld.random.nextInt(playerList.size());
-                        SECRET_MURDER_FAKE_COHORTS.add(playerList.get(randomIndex).getUuid());
-                        playerList.remove(randomIndex);
-                    }
+            if (gameWorldComponent.getGameMode() == WatheGameModes.SECRET_MURDER && gameWorldComponent.isRunning()
+                    && MinecraftClient.getInstance().player != null
+                    && gameWorldComponent.isRole(MinecraftClient.getInstance().player, WatheRoles.SECRET_KILLER)) {
+                if (!secretMurderCohortsAssigned || secretMurderCohortGame != gameWorldComponent) {
+                    SECRET_MURDER_FAKE_COHORTS.clear();
+                    // Synced roles include every participant, even players outside entity tracking range.
+                    SECRET_MURDER_FAKE_COHORTS.addAll(SecretMurderCohorts.choose(
+                            gameWorldComponent.getRoles().keySet().stream()
+                                    .filter(uuid -> gameWorldComponent.isRole(uuid, WatheRoles.SECRET_KILLER)).toList(),
+                            MinecraftClient.getInstance().player.getUuid(), gameWorldComponent.getKillerDividend(), clientWorld.random));
+                    secretMurderCohortsAssigned = true;
+                    secretMurderCohortGame = gameWorldComponent;
                 }
-            } else if (!SECRET_MURDER_FAKE_COHORTS.isEmpty()) {
+            } else {
                 SECRET_MURDER_FAKE_COHORTS.clear();
+                secretMurderCohortsAssigned = false;
+                secretMurderCohortGame = null;
             }
         });
 
@@ -246,6 +254,7 @@ public class WatheClient implements ClientModInitializer {
         ClientPlayNetworking.registerGlobalReceiver(PoisonUtils.PoisonOverlayPayload.ID, new PoisonUtils.PoisonOverlayPayload.Receiver());
         ClientPlayNetworking.registerGlobalReceiver(GunDropPayload.ID, new GunDropPayload.Receiver());
         ClientPlayNetworking.registerGlobalReceiver(AnnounceWelcomePayload.ID, new AnnounceWelcomePayload.Receiver());
+        ClientPlayNetworking.registerGlobalReceiver(PlayerDeathEffectsPayload.ID, new PlayerDeathEffectsPayload.Receiver());
         ClientPlayNetworking.registerGlobalReceiver(AnnounceEndingPayload.ID, new AnnounceEndingPayload.Receiver());
         ClientPlayNetworking.registerGlobalReceiver(TaskCompletePayload.ID, new TaskCompletePayload.Receiver());
 
