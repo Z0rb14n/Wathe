@@ -1,6 +1,5 @@
 package dev.doctor4t.wathe.mixin.compat.sodium;
 
-import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import dev.doctor4t.wathe.client.WatheClient;
 import net.caffeinemc.mods.sodium.client.render.chunk.RenderSectionManager;
 import net.minecraft.client.render.Camera;
@@ -22,14 +21,12 @@ public class RenderSectionManagerMixin {
         }
     }
 
-    @ModifyExpressionValue(method = "getSearchDistance",
-            at = @At(value = "FIELD",
-                    target = "Lnet/caffeinemc/mods/sodium/client/gui/SodiumOptions$PerformanceSettings;useFogOcclusion:Z"),
-            remap = false)
-    private boolean wathe$forceNotUseFogOcclusion(boolean original) {
+    @Inject(method = "getSearchDistance", at = @At("HEAD"), remap = false, cancellable = true)
+    private void wathe$includeScenerySources(CallbackInfoReturnable<Float> cir) {
         if (WatheClient.isTrainMoving()) {
-            return false;
+            // Source sections can be far away before the shader moves them beside
+            // the train. Neither fog nor the original render radius can reject them.
+            cir.setReturnValue(Float.POSITIVE_INFINITY);
         }
-        return original;
     }
 }

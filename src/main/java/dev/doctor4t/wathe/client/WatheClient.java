@@ -42,6 +42,8 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
+import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.event.client.player.ClientPreAttackCallback;
 import net.minecraft.block.Block;
@@ -76,6 +78,7 @@ public class WatheClient implements ClientModInitializer {
     public static HandParticleManager handParticleManager;
     public static Map<PlayerEntity, Vec3d> particleMap;
     private static boolean prevGameRunning;
+    private static boolean sceneryViewDistanceActive;
     public static GameWorldComponent gameComponent;
     public static TrainWorldComponent trainComponent;
     public static PlayerMoodComponent moodComponent;
@@ -147,7 +150,16 @@ public class WatheClient implements ClientModInitializer {
             gameComponent = GameWorldComponent.KEY.get(clientWorld);
             trainComponent = TrainWorldComponent.KEY.get(clientWorld);
             moodComponent = PlayerMoodComponent.KEY.get(MinecraftClient.getInstance().player);
+            boolean needsScenery = needsSceneryViewDistance();
+            if (needsScenery != sceneryViewDistanceActive) {
+                sceneryViewDistanceActive = needsScenery;
+                MinecraftClient.getInstance().options.sendClientSettings();
+                // Discard draw batches filtered for moving scenery when motion ends,
+                // including when the user's normal render distance is already 32.
+                MinecraftClient.getInstance().worldRenderer.reload();
+            }
         });
+        ClientPlayConnectionEvents.DISCONNECT.register(WatheClient::onDisconnect);
 
         ClientPreAttackCallback.EVENT.register((client, player, clickCount) -> {
             if (player.getMainHandStack().getItem() instanceof AttackUseItem) {
@@ -263,6 +275,20 @@ public class WatheClient implements ClientModInitializer {
 
     public static boolean isTrainMoving() {
         return trainComponent != null && trainComponent.getSpeed() > 0;
+    }
+
+    private static void onDisconnect(ClientPlayNetworkHandler handler, MinecraftClient client) {
+        sceneryViewDistanceActive = false;
+        trainComponent = null;
+    }
+
+    public static boolean needsSceneryViewDistance() {
+        MinecraftClient client = MinecraftClient.getInstance();
+        // Read the current world, since options are also sent before the first
+        // world tick and the cached train component may belong to the last map.
+        return client != null && client.world != null
+                && FabricLoader.getInstance().isModLoaded("sodium")
+                && TrainWorldComponent.KEY.get(client.world).getSpeed() > 0;
     }
 
     public static class CustomModelProvider implements ModelLoadingPlugin {

@@ -1,12 +1,16 @@
 package dev.doctor4t.wathe.mixin.compat.sodium;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import dev.doctor4t.wathe.client.WatheClient;
+import dev.doctor4t.wathe.client.util.SceneryTransform;
 import dev.doctor4t.wathe.compat.SodiumShaderInterface;
 import net.caffeinemc.mods.sodium.client.gl.buffer.GlBufferUsage;
 import net.caffeinemc.mods.sodium.client.gl.buffer.GlMutableBuffer;
 import net.caffeinemc.mods.sodium.client.gl.device.CommandList;
+import net.caffeinemc.mods.sodium.client.gl.device.MultiDrawBatch;
 import net.caffeinemc.mods.sodium.client.render.chunk.ChunkRenderMatrices;
 import net.caffeinemc.mods.sodium.client.render.chunk.DefaultChunkRenderer;
 import net.caffeinemc.mods.sodium.client.render.chunk.LocalSectionIndex;
@@ -17,7 +21,6 @@ import net.caffeinemc.mods.sodium.client.render.chunk.shader.ChunkShaderInterfac
 import net.caffeinemc.mods.sodium.client.render.chunk.terrain.TerrainRenderPass;
 import net.caffeinemc.mods.sodium.client.render.viewport.CameraTransform;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkSectionPos;
 import org.lwjgl.system.MemoryUtil;
 import org.spongepowered.asm.mixin.Mixin;
@@ -34,6 +37,35 @@ public abstract class DefaultChunkRendererMixin {
     private static ByteBuffer wathe_buffer = MemoryUtil.memAlloc(RenderRegion.REGION_SIZE * 16);
     @Unique
     private static GlMutableBuffer glBuffer;
+
+    @WrapOperation(method = "render", at = @At(value = "INVOKE",
+            target = "Lnet/caffeinemc/mods/sodium/client/render/chunk/region/RenderRegion;getCachedBatch(Lnet/caffeinemc/mods/sodium/client/render/chunk/terrain/TerrainRenderPass;)Lnet/caffeinemc/mods/sodium/client/gl/device/MultiDrawBatch;"), remap = false)
+    private MultiDrawBatch wathe$refreshMovingDraws(RenderRegion region, TerrainRenderPass pass,
+                                                   Operation<MultiDrawBatch> original) {
+        if (WatheClient.isTrainMoving()) {
+            // Visible sections change as templates move, even with a stationary camera.
+            region.clearCachedBatchFor(pass);
+        }
+        return original.call(region, pass);
+    }
+
+    @ModifyExpressionValue(method = "fillCommandBuffer", at = @At(value = "INVOKE",
+            target = "Lnet/caffeinemc/mods/sodium/client/render/chunk/data/SectionRenderDataUnsafe;getSliceMask(J)I"), remap = false)
+    private static int wathe$cullTranslatedSections(int original,
+                                                   @Local(argsOnly = true) RenderRegion region,
+                                                   @Local(argsOnly = true) CameraTransform camera,
+                                                   @Local(name = "sectionIndex") int sectionIndex) {
+        if (WatheClient.isTrainMoving()) {
+            var client = MinecraftClient.getInstance();
+            var position = wathe$sceneryPosition(region, camera, sectionIndex);
+            if (!SceneryTransform.isWithinViewDistance(position,
+                    camera.intX + (double) camera.fracX, camera.intY + (double) camera.fracY,
+                    camera.intZ + (double) camera.fracZ, client.options.getViewDistance().getValue())) {
+                return 0;
+            }
+        }
+        return original;
+    }
 
     @ModifyExpressionValue(
             method = "render(Lnet/caffeinemc/mods/sodium/client/render/chunk/ChunkRenderMatrices;Lnet/caffeinemc/mods/sodium/client/gl/device/CommandList;Lnet/caffeinemc/mods/sodium/client/render/chunk/lists/ChunkRenderListIterable;Lnet/caffeinemc/mods/sodium/client/render/chunk/terrain/TerrainRenderPass;Lnet/caffeinemc/mods/sodium/client/render/viewport/CameraTransform;Z)V",
@@ -102,52 +134,20 @@ public abstract class DefaultChunkRendererMixin {
 
     @Unique
     private static void wathe$offsetScenery(RenderRegion region, CameraTransform camera, int sectionIndex) {
-        if (WatheClient.isTrainMoving()) {
-            float trainSpeed = WatheClient.getTrainSpeed();
-            int chunkSize = 16;
-            int tileWidth = 15 * chunkSize;
-            int height = 116;
-            int tileLength = 32 * chunkSize;
-            int tileSize = tileLength * 3;
-            float time = WatheClient.trainComponent.getTime() + MinecraftClient.getInstance().getRenderTickCounter().getTickDelta(true);
+        var position = wathe$sceneryPosition(region, camera, sectionIndex);
+        wathe_buffer.putFloat(sectionIndex * 16, position.x() - (region.getOriginX() + LocalSectionIndex.unpackX(sectionIndex) * 16));
+        wathe_buffer.putFloat(sectionIndex * 16 + 4, position.y() - (region.getOriginY() + LocalSectionIndex.unpackY(sectionIndex) * 16));
+        wathe_buffer.putFloat(sectionIndex * 16 + 8, position.z() - (region.getOriginZ() + LocalSectionIndex.unpackZ(sectionIndex) * 16));
+    }
 
-            BlockPos blockPos = new BlockPos(
-                    region.getOriginX() + LocalSectionIndex.unpackX(sectionIndex) * 16,
-                    region.getOriginY() + LocalSectionIndex.unpackY(sectionIndex) * 16,
-                    region.getOriginZ() + LocalSectionIndex.unpackZ(sectionIndex) * 16
-            );
-
-            boolean trainSection = ChunkSectionPos.getSectionCoord(blockPos.getY()) >= 4;
-            float v1 = (float) ((double) blockPos.getX() - camera.fracX);
-            float v2 = (float) ((double) blockPos.getY() - camera.fracY);
-            float v3 = (float) ((double) blockPos.getZ() - camera.fracZ);
-            int zSection = blockPos.getZ() / chunkSize - ChunkSectionPos.getSectionCoord(camera.intZ);
-
-            float finalX = v1;
-            float finalY = v2;
-            float finalZ = v3;
-
-            if (zSection <= -8) {
-                finalX = ((v1 - tileLength + ((time) / 73.8f * trainSpeed)) % tileSize - tileSize / 2f);
-                finalY = (v2 + height);
-                finalZ = v3 + tileWidth;
-            } else if (zSection >= 8) {
-                finalX = ((v1 + tileLength + ((time) / 73.8f * trainSpeed)) % tileSize - tileSize / 2f);
-                finalY = (v2 + height);
-                finalZ = v3 - tileWidth;
-            } else if (!trainSection) {
-                finalX = ((v1 + ((time) / 73.8f * trainSpeed)) % tileSize - tileSize / 2f);
-                finalY = (v2 + height); // + zSection * 16;
-                finalZ = v3;
-            }
-
-            finalX = (blockPos.getX() - finalX) - camera.fracX;
-            finalY = (blockPos.getY() - finalY) - camera.fracY;
-            finalZ = (blockPos.getZ() - finalZ) - camera.fracZ;
-
-            wathe_buffer.putFloat(sectionIndex * 16, -finalX);
-            wathe_buffer.putFloat(sectionIndex * 16 + 4, -finalY);
-            wathe_buffer.putFloat(sectionIndex * 16 + 8, -finalZ);
-        }
+    @Unique
+    private static SceneryTransform.Position wathe$sceneryPosition(RenderRegion region, CameraTransform camera, int sectionIndex) {
+        float time = WatheClient.trainComponent.getTime()
+                + MinecraftClient.getInstance().getRenderTickCounter().getTickDelta(true);
+        return SceneryTransform.transform(
+                region.getOriginX() + LocalSectionIndex.unpackX(sectionIndex) * 16,
+                region.getOriginY() + LocalSectionIndex.unpackY(sectionIndex) * 16,
+                region.getOriginZ() + LocalSectionIndex.unpackZ(sectionIndex) * 16,
+                camera.fracX, ChunkSectionPos.getSectionCoord(camera.intZ), time, WatheClient.getTrainSpeed());
     }
 }
