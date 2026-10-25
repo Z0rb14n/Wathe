@@ -126,6 +126,11 @@ public class GameFunctions {
         baseInitialize(serverWorld, gameComponent, readyPlayerList);
         gameComponent.getGameMode().initializeGame(serverWorld, gameComponent, readyPlayerList);
 
+        if (dev.doctor4t.wathe.compat.SecretMurderRoleCompat.isSecretMurder(gameComponent.getGameMode())) {
+            gameComponent.setSecretMurderCohortCount(dev.doctor4t.wathe.compat.SecretMurderRoleCompat.chooseCohortCount(
+                    gameComponent, readyPlayerList.size(), serverWorld.getRandom().nextLong()));
+        }
+
         // Roles are assigned by this point — snapshot them for stats tracking.
         dev.doctor4t.wathe.stats.WatheStats.startRound(serverWorld, readyPlayerList);
 

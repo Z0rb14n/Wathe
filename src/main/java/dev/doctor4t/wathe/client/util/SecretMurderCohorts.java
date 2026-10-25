@@ -10,7 +10,10 @@ public final class SecretMurderCohorts {
     private SecretMurderCohorts() {}
 
     public static List<UUID> choose(List<UUID> participants, UUID self, int killerDividend, Random random) {
-        int count = Math.max(0, participants.size() / Math.max(1, killerDividend) - 1);
+        return chooseForCount(participants, self, Math.max(0, participants.size() / Math.max(1, killerDividend) - 1), random);
+    }
+
+    public static List<UUID> chooseForCount(List<UUID> participants, UUID self, int count, Random random) {
         List<UUID> candidates = new ArrayList<>(participants);
         candidates.remove(self);
         List<UUID> cohorts = new ArrayList<>();

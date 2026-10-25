@@ -231,14 +231,14 @@ public class WatheClient implements ClientModInitializer {
             GameWorldComponent gameWorldComponent = GameWorldComponent.KEY.get(clientWorld);
             if (gameWorldComponent.getGameMode() == WatheGameModes.SECRET_MURDER && gameWorldComponent.isRunning()
                     && MinecraftClient.getInstance().player != null
-                    && gameWorldComponent.isRole(MinecraftClient.getInstance().player, WatheRoles.SECRET_KILLER)) {
+                    && gameWorldComponent.canUseKillerFeatures(MinecraftClient.getInstance().player)) {
                 if (!secretMurderCohortsAssigned || secretMurderCohortGame != gameWorldComponent) {
                     SECRET_MURDER_FAKE_COHORTS.clear();
                     // Synced roles include every participant, even players outside entity tracking range.
-                    SECRET_MURDER_FAKE_COHORTS.addAll(SecretMurderCohorts.choose(
+                    SECRET_MURDER_FAKE_COHORTS.addAll(SecretMurderCohorts.chooseForCount(
                             gameWorldComponent.getRoles().keySet().stream()
-                                    .filter(uuid -> gameWorldComponent.isRole(uuid, WatheRoles.SECRET_KILLER)).toList(),
-                            MinecraftClient.getInstance().player.getUuid(), gameWorldComponent.getKillerDividend(), clientWorld.random));
+                                    .filter(uuid -> gameWorldComponent.getRole(uuid).canUseKiller()).toList(),
+                            MinecraftClient.getInstance().player.getUuid(), gameWorldComponent.getSecretMurderCohortCount(), clientWorld.random));
                     secretMurderCohortsAssigned = true;
                     secretMurderCohortGame = gameWorldComponent;
                 }

@@ -69,6 +69,7 @@ public class GameWorldComponent implements AutoSyncedComponent, ServerTickingCom
 
     private int killerDividend = 5;
     private int vigilanteDividend = 5;
+    private int secretMurderCohortCount = -1;
 
     public GameWorldComponent(World world) {
         this.world = world;
@@ -180,6 +181,7 @@ public class GameWorldComponent implements AutoSyncedComponent, ServerTickingCom
 
     public void clearRoleMap() {
         this.roles.clear();
+        this.secretMurderCohortCount = -1;
         setPsychosActive(0);
     }
 
@@ -257,6 +259,15 @@ public class GameWorldComponent implements AutoSyncedComponent, ServerTickingCom
         return killerDividend;
     }
 
+    public int getSecretMurderCohortCount() {
+        return secretMurderCohortCount >= 0 ? secretMurderCohortCount
+                : Math.max(0, getAllKillerTeamPlayers().size() / Math.max(1, killerDividend) - 1);
+    }
+
+    public void setSecretMurderCohortCount(int count) {
+        this.secretMurderCohortCount = Math.max(0, count);
+    }
+
     public void setKillerDividend(int killerDividend) {
         this.killerDividend = killerDividend;
         this.sync();
@@ -292,6 +303,8 @@ public class GameWorldComponent implements AutoSyncedComponent, ServerTickingCom
 
         this.killerDividend = nbtCompound.getInt("KillerDividend");
         this.vigilanteDividend = nbtCompound.getInt("VigilanteDividend");
+        this.secretMurderCohortCount = nbtCompound.contains("SecretMurderCohortCount")
+                ? nbtCompound.getInt("SecretMurderCohortCount") : -1;
 
         for (Role role : WatheRoles.ROLES) {
             this.setRoles(uuidListFromNbt(nbtCompound, role.identifier().toString()), role);
@@ -329,6 +342,7 @@ public class GameWorldComponent implements AutoSyncedComponent, ServerTickingCom
 
         nbtCompound.putInt("KillerDividend", killerDividend);
         nbtCompound.putInt("VigilanteDividend", vigilanteDividend);
+        nbtCompound.putInt("SecretMurderCohortCount", secretMurderCohortCount);
 
         for (Role role : WatheRoles.ROLES) {
             nbtCompound.put(role.identifier().toString(), nbtFromUuidList(getAllWithRole(role)));
