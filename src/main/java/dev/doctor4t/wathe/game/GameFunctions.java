@@ -403,6 +403,11 @@ public class GameFunctions {
                             CachedBlockPosition cachedBlockPosition = new CachedBlockPosition(serverWorld, blockPos6, false);
                             BlockState blockState = cachedBlockPosition.getBlockState();
 
+                            // Structure voids mask destination blocks, including their block entity data.
+                            if (blockState.isOf(Blocks.STRUCTURE_VOID)) {
+                                continue;
+                            }
+
                             BlockEntity blockEntity = serverWorld.getBlockEntity(blockPos6);
                             if (blockEntity != null) {
                                 BlockEntityInfo blockEntityInfo = new BlockEntityInfo(blockEntity.createComponentlessNbt(serverWorld.getRegistryManager()), blockEntity.getComponents());
@@ -455,7 +460,7 @@ public class GameFunctions {
                 }
 
                 serverWorld.getBlockTickScheduler().scheduleTicks(serverWorld.getBlockTickScheduler(), backupTrainBox, blockPos5);
-                if (mx == 0) {
+                if (mx == 0 && !list4.isEmpty()) {
                     Wathe.LOGGER.info("Train reset failed: No blocks copied. Queueing another attempt.");
                     return true;
                 }
