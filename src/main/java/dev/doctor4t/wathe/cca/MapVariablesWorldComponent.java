@@ -3,6 +3,7 @@ package dev.doctor4t.wathe.cca;
 import dev.doctor4t.wathe.Wathe;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
@@ -47,6 +48,8 @@ public class MapVariablesWorldComponent implements AutoSyncedComponent {
     String customMapGuaranteedKeys = "";
     int customMapNumRoomKeys = 7;
     String customMapRoomKeyString = "Room %d";
+    boolean lobbyHasTimeOfDay = false;
+    int lobbyTimeOfDay = 6000;
 
     public PosWithOrientation getSpawnPos() {
         return spawnPos;
@@ -147,6 +150,26 @@ public class MapVariablesWorldComponent implements AutoSyncedComponent {
     public String getCustomMapRoomKeyString() { return customMapRoomKeyString; }
     public void setCustomMapRoomKeyString(String v) { this.customMapRoomKeyString = v; this.sync(); }
 
+    public boolean isLobbyHasTimeOfDay() { return lobbyHasTimeOfDay; }
+    public void setLobbyHasTimeOfDay(boolean v) {
+        this.lobbyHasTimeOfDay = v;
+        if (this.world instanceof ServerWorld serverWorld && !GameWorldComponent.KEY.get(serverWorld).isRunning()) {
+            if (v) {
+                serverWorld.setTimeOfDay(this.lobbyTimeOfDay);
+            }
+        }
+        this.sync();
+    }
+
+    public int getLobbyTimeOfDay() { return lobbyTimeOfDay; }
+    public void setLobbyTimeOfDay(int v) {
+        this.lobbyTimeOfDay = v;
+        if (this.lobbyHasTimeOfDay && this.world instanceof ServerWorld serverWorld && !GameWorldComponent.KEY.get(serverWorld).isRunning()) {
+            serverWorld.setTimeOfDay(v);
+        }
+        this.sync();
+    }
+
     @Override
     public void readFromNbt(@NotNull NbtCompound tag, RegistryWrapper.@NotNull WrapperLookup registryLookup) {
         this.spawnPos = getPosWithOrientationFromNbt(tag, "spawnPos");
@@ -168,6 +191,8 @@ public class MapVariablesWorldComponent implements AutoSyncedComponent {
         if (tag.contains("customMapGuaranteedKeys")) this.customMapGuaranteedKeys = tag.getString("customMapGuaranteedKeys");
         if (tag.contains("customMapNumRoomKeys")) this.customMapNumRoomKeys = tag.getInt("customMapNumRoomKeys");
         if (tag.contains("customMapRoomKeyString")) this.customMapRoomKeyString = tag.getString("customMapRoomKeyString");
+        if (tag.contains("lobbyHasTimeOfDay")) this.lobbyHasTimeOfDay = tag.getBoolean("lobbyHasTimeOfDay");
+        if (tag.contains("lobbyTimeOfDay")) this.lobbyTimeOfDay = tag.getInt("lobbyTimeOfDay");
     }
 
     @Override
@@ -189,6 +214,8 @@ public class MapVariablesWorldComponent implements AutoSyncedComponent {
         tag.putString("customMapGuaranteedKeys", this.customMapGuaranteedKeys);
         tag.putInt("customMapNumRoomKeys", this.customMapNumRoomKeys);
         tag.putString("customMapRoomKeyString", this.customMapRoomKeyString);
+        tag.putBoolean("lobbyHasTimeOfDay", this.lobbyHasTimeOfDay);
+        tag.putInt("lobbyTimeOfDay", this.lobbyTimeOfDay);
     }
 
     public static class PosWithOrientation {
