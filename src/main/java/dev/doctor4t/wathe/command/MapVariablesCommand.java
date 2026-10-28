@@ -201,6 +201,16 @@ public class MapVariablesCommand {
                                                 .executes(context -> setValue(context.getSource(), "customMapRoomKeyString",
                                                         StringArgumentType.getString(context, "value"),
                                                         v -> getMapVarsComponent(context).setCustomMapRoomKeyString(v)))))
+                                .then(CommandManager.literal("customMapUseRoomKeyList")
+                                        .then(CommandManager.argument("value", BoolArgumentType.bool())
+                                                .executes(context -> setValue(context.getSource(), "customMapUseRoomKeyList",
+                                                        BoolArgumentType.getBool(context, "value"),
+                                                        v -> getMapVarsComponent(context).setCustomMapUseRoomKeyList(v)))))
+                                .then(CommandManager.literal("customMapRoomKeyList")
+                                        .then(CommandManager.argument("value", StringArgumentType.greedyString())
+                                                .executes(context -> setValue(context.getSource(), "customMapRoomKeyList",
+                                                        StringArgumentType.getString(context, "value"),
+                                                        v -> getMapVarsComponent(context).setCustomMapRoomKeyList(v)))))
                         )
                         .then(CommandManager.literal("get")
                                 .then(CommandManager.literal("gameMode").executes(context -> sendVar(context.getSource(), "gameMode",
@@ -250,6 +260,12 @@ public class MapVariablesCommand {
                                 .then(CommandManager.literal("customMapRoomKeyString")
                                         .executes(context -> sendVar(context.getSource(), "customMapRoomKeyString",
                                                 getMapVarsComponent(context).getCustomMapRoomKeyString())))
+                                .then(CommandManager.literal("customMapUseRoomKeyList")
+                                        .executes(context -> sendVar(context.getSource(), "customMapUseRoomKeyList",
+                                                getMapVarsComponent(context).isCustomMapUseRoomKeyList())))
+                                .then(CommandManager.literal("customMapRoomKeyList")
+                                        .executes(context -> sendVar(context.getSource(), "customMapRoomKeyList",
+                                                getMapVarsComponent(context).getCustomMapRoomKeyList())))
                         )
         );
     }

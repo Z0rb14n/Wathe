@@ -47,6 +47,8 @@ public class MapVariablesWorldComponent implements AutoSyncedComponent {
     String customMapGuaranteedKeys = "";
     int customMapNumRoomKeys = 7;
     String customMapRoomKeyString = "Room %d";
+    boolean customMapUseRoomKeyList = false;
+    String customMapRoomKeyList = "";
 
     public PosWithOrientation getSpawnPos() {
         return spawnPos;
@@ -147,6 +149,12 @@ public class MapVariablesWorldComponent implements AutoSyncedComponent {
     public String getCustomMapRoomKeyString() { return customMapRoomKeyString; }
     public void setCustomMapRoomKeyString(String v) { this.customMapRoomKeyString = v; this.sync(); }
 
+    public boolean isCustomMapUseRoomKeyList() { return customMapUseRoomKeyList; }
+    public void setCustomMapUseRoomKeyList(boolean v) { this.customMapUseRoomKeyList = v; this.sync(); }
+
+    public String getCustomMapRoomKeyList() { return customMapRoomKeyList; }
+    public void setCustomMapRoomKeyList(String v) { this.customMapRoomKeyList = v; this.sync(); }
+
     @Override
     public void readFromNbt(@NotNull NbtCompound tag, RegistryWrapper.@NotNull WrapperLookup registryLookup) {
         this.spawnPos = getPosWithOrientationFromNbt(tag, "spawnPos");
@@ -168,6 +176,8 @@ public class MapVariablesWorldComponent implements AutoSyncedComponent {
         if (tag.contains("customMapGuaranteedKeys")) this.customMapGuaranteedKeys = tag.getString("customMapGuaranteedKeys");
         if (tag.contains("customMapNumRoomKeys")) this.customMapNumRoomKeys = tag.getInt("customMapNumRoomKeys");
         if (tag.contains("customMapRoomKeyString")) this.customMapRoomKeyString = tag.getString("customMapRoomKeyString");
+        if (tag.contains("customMapUseRoomKeyList")) this.customMapUseRoomKeyList = tag.getBoolean("customMapUseRoomKeyList");
+        if (tag.contains("customMapRoomKeyList")) this.customMapRoomKeyList = tag.getString("customMapRoomKeyList");
     }
 
     @Override
@@ -189,6 +199,8 @@ public class MapVariablesWorldComponent implements AutoSyncedComponent {
         tag.putString("customMapGuaranteedKeys", this.customMapGuaranteedKeys);
         tag.putInt("customMapNumRoomKeys", this.customMapNumRoomKeys);
         tag.putString("customMapRoomKeyString", this.customMapRoomKeyString);
+        tag.putBoolean("customMapUseRoomKeyList", this.customMapUseRoomKeyList);
+        tag.putString("customMapRoomKeyList", this.customMapRoomKeyList);
     }
 
     public static class PosWithOrientation {

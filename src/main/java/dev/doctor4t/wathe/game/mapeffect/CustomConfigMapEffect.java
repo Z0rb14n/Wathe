@@ -26,8 +26,16 @@ public class CustomConfigMapEffect extends KeyProvidingMapEffect {
             serverWorld.setWeather(clearTime, rainDuration, vars.isCustomMapRaining(), vars.isCustomMapThundering());
         }
         if (players.isEmpty()) return;
-        if (vars.getCustomMapNumRoomKeys() > 0)
-            provideKeysOnly(serverWorld, players, vars.getCustomMapNumRoomKeys(), vars.getCustomMapRoomKeyString());
+        if (vars.isCustomMapUseRoomKeyList()) {
+            String[] roomKeyList = keyVarToArray(vars.getCustomMapRoomKeyList());
+            Collections.shuffle(players);
+            for (int i = 0; i < players.size(); i++) {
+                givePlayerKey(roomKeyList[i % roomKeyList.length], players.get(i));
+            }
+        } else {
+            if (vars.getCustomMapNumRoomKeys() > 0)
+                provideKeysOnly(serverWorld, players, vars.getCustomMapNumRoomKeys(), vars.getCustomMapRoomKeyString());
+        }
         String[] guaranteedKeys = keyVarToArray(vars.getCustomMapGuaranteedKeys());
         String[] uniqueKeys = keyVarToArray(vars.getCustomMapUniqueKeys());
         for (String guaranteedKey : guaranteedKeys) {
