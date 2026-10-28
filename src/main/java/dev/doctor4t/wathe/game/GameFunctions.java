@@ -292,14 +292,16 @@ public class GameFunctions {
             }
         }
 
+        PlayerDeathEffectsPayload deathEffects;
         if (victim instanceof ServerPlayerEntity serverPlayerEntity && isPlayerAliveAndSurvival(serverPlayerEntity)) {
+            deathEffects = PlayerDeathEffectsPayload.capture(serverPlayerEntity, killer, deathReason);
             serverPlayerEntity.changeGameMode(net.minecraft.world.GameMode.SPECTATOR);
         } else {
             return;
         }
 
         dev.doctor4t.wathe.stats.WatheStats.recordKill(victim, killer, deathReason);
-        PlayerDeathEffectsPayload.send(serverPlayerEntity, killer, deathReason);
+        deathEffects.send(serverPlayerEntity, killer);
 
         if (killer != null) {
             if (GameWorldComponent.KEY.get(killer.getWorld()).canUseKillerFeatures(killer)) {

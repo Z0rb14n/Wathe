@@ -32,6 +32,7 @@ import dev.doctor4t.wathe.index.*;
 import dev.doctor4t.wathe.item.AttackUseItem;
 import dev.doctor4t.wathe.client.util.GunControls;
 import dev.doctor4t.wathe.client.util.SecretMurderCohorts;
+import dev.doctor4t.wathe.client.util.WatheBloodCompat;
 import dev.doctor4t.wathe.network.*;
 import dev.doctor4t.wathe.util.ConfigSyncPayload;
 import dev.doctor4t.wathe.util.HandParticleManager;
@@ -101,6 +102,7 @@ public class WatheClient implements ClientModInitializer {
         // Initialize ScreenParticle
         handParticleManager = new HandParticleManager();
         particleMap = new HashMap<>();
+        ClientTickEvents.END_CLIENT_TICK.register(WatheBloodCompat::tickClient);
 
         // Register particle factories
         WatheParticles.registerFactories();

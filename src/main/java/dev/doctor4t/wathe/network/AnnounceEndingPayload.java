@@ -2,6 +2,7 @@ package dev.doctor4t.wathe.network;
 
 import dev.doctor4t.wathe.Wathe;
 import dev.doctor4t.wathe.client.gui.RoundTextRenderer;
+import dev.doctor4t.wathe.client.util.WatheBloodCompat;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.codec.PacketCodec;
@@ -20,6 +21,7 @@ public record AnnounceEndingPayload() implements CustomPayload {
     public static class Receiver implements ClientPlayNetworking.PlayPayloadHandler<AnnounceEndingPayload> {
         @Override
         public void receive(@NotNull AnnounceEndingPayload payload, ClientPlayNetworking.@NotNull Context context) {
+            WatheBloodCompat.clear();
             RoundTextRenderer.startEnd();
         }
     }
