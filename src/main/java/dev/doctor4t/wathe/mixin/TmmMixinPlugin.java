@@ -36,6 +36,7 @@ public class TmmMixinPlugin implements IMixinConfigPlugin {
                     .map(mod -> mod.getMetadata().getVersion().getFriendlyString().equals("1.4.147+v240613"))
                     .orElse(false);
         }
+        if (mixinClassName.startsWith("dev.doctor4t.wathe.mixin.compat.blood.")) return LegacyRoleAddons.needsBloodPatch();
         if (mixinClassName.startsWith("dev.doctor4t.wathe.mixin.compat.shooterpunishments.")) {
             return LegacyRoleAddons.needsShooterPunishmentsPatch()
                     && (!mixinClassName.endsWith(".BanditReceiverMixin") || LegacyRoleAddons.needsHsrPatch());

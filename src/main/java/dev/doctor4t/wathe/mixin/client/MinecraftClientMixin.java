@@ -12,18 +12,19 @@ import dev.doctor4t.wathe.index.WatheItems;
 import dev.doctor4t.wathe.index.tag.WatheItemTags;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.client.render.item.HeldItemRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(MinecraftClient.class)
 public class MinecraftClientMixin {
@@ -44,17 +45,17 @@ public class MinecraftClientMixin {
         return original;
     }
 
-    // Run after vanilla's block-breaking/riding checks and use-key repeat delay,
-    // but before block/entity interaction so aiming at a door still fires the gun.
-    @Inject(method = "doItemUse", at = @At(value = "FIELD",
-            target = "Lnet/minecraft/client/MinecraftClient;crosshairTarget:Lnet/minecraft/util/hit/HitResult;", ordinal = 0),
-            cancellable = true)
-    private void wathe$rightClickGunUse(CallbackInfo ci) {
-        if (this.player != null && !this.player.isSpectator()
-                && GunControls.usesRightClick(this.player.getMainHandStack())) {
-            GunControls.fire(this.player);
-            ci.cancel();
+    // Vanilla block/entity interactions take priority; only unused clicks fire.
+    @WrapOperation(method = "doItemUse", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/client/network/ClientPlayerInteractionManager;interactItem(Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/util/Hand;)Lnet/minecraft/util/ActionResult;"))
+    private ActionResult wathe$rightClickGunUse(ClientPlayerInteractionManager manager, PlayerEntity player,
+                                               Hand hand, Operation<ActionResult> original) {
+        if (!player.isSpectator() && hand == Hand.MAIN_HAND
+                && GunControls.usesRightClick(player.getMainHandStack())) {
+            GunControls.fire(player);
+            return ActionResult.CONSUME;
         }
+        return original.call(manager, player, hand);
     }
 
     @WrapWithCondition(method = "doItemUse",

@@ -13,6 +13,8 @@ import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Constant;
+import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 /** Use HSR's existing shot, recoil, particles and cooldown through Wathe's input route. */
@@ -21,6 +23,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class BanditRevolverItemMixin implements GunControls.AddonGun {
     @Unique
     private boolean wathe$dispatchingShot;
+
+    @ModifyConstant(method = "getGunTarget", constant = @Constant(doubleValue = 15.0), require = 1, allow = 1, remap = false)
+    private static double wathe$configuredGunRange(double original) {
+        return dev.doctor4t.wathe.WatheConfig.gunRange;
+    }
 
     @Override
     public void triggerAttackUseClient(PlayerEntity player) {

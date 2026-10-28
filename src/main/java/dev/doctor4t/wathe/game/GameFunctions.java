@@ -21,6 +21,7 @@ import dev.doctor4t.wathe.index.WatheEntities;
 import dev.doctor4t.wathe.index.WatheItems;
 import dev.doctor4t.wathe.index.WatheSounds;
 import dev.doctor4t.wathe.network.AnnounceEndingPayload;
+import dev.doctor4t.wathe.network.PlayerDeathEffectsPayload;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -124,6 +125,11 @@ public class GameFunctions {
         GameEvents.ON_GAME_START.invoker().onGameStart(gameComponent.getGameMode());
         baseInitialize(serverWorld, gameComponent, readyPlayerList);
         gameComponent.getGameMode().initializeGame(serverWorld, gameComponent, readyPlayerList);
+
+        if (dev.doctor4t.wathe.compat.SecretMurderRoleCompat.isSecretMurder(gameComponent.getGameMode())) {
+            gameComponent.setSecretMurderCohortCount(dev.doctor4t.wathe.compat.SecretMurderRoleCompat.chooseCohortCount(
+                    gameComponent, readyPlayerList.size(), serverWorld.getRandom().nextLong()));
+        }
 
         // Roles are assigned by this point — snapshot them for stats tracking.
         dev.doctor4t.wathe.stats.WatheStats.startRound(serverWorld, readyPlayerList);
@@ -293,6 +299,7 @@ public class GameFunctions {
         }
 
         dev.doctor4t.wathe.stats.WatheStats.recordKill(victim, killer, deathReason);
+        PlayerDeathEffectsPayload.send(serverPlayerEntity, killer, deathReason);
 
         if (killer != null) {
             if (GameWorldComponent.KEY.get(killer.getWorld()).canUseKillerFeatures(killer)) {

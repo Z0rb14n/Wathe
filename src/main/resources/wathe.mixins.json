@@ -39,6 +39,7 @@
   },
   "client": [
     "compat.carpet.CarpetClientMixin",
+    "compat.blood.WatheBloodClientMixin",
     "compat.hsr.BanditRevolverItemMixin",
     "client.LivingEntityRendererMixin",
     "client.AbstractClientPlayerEntityMixin",

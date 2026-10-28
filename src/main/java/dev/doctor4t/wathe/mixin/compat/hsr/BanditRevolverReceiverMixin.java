@@ -9,12 +9,19 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.Constant;
+import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
 /** Packet class references are migrated by TmmMixinPlugin before this mixin applies. */
 @Pseudo
 @Mixin(targets = "dpm.harpysimpleroles.util.BanditRevolverShootPayload$Receiver", remap = false)
 public class BanditRevolverReceiverMixin {
     private static final String RECEIVE = "receive(Ldpm/harpysimpleroles/util/BanditRevolverShootPayload;Lnet/fabricmc/fabric/api/networking/v1/ServerPlayNetworking$Context;)V";
+
+    @ModifyConstant(method = RECEIVE, constant = @Constant(doubleValue = 65.0), require = 1, allow = 1)
+    private double wathe$configuredGunRange(double original) {
+        return dev.doctor4t.wathe.WatheConfig.gunRange;
+    }
 
     @Redirect(method = RECEIVE, at = @At(value = "INVOKE",
             target = "Ldev/doctor4t/wathe/cca/GameWorldComponent;getBackfireChance()F"))
